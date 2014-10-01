@@ -1,0 +1,20 @@
+{
+  "name": "infomarket",
+  "version": "0.1",
+  "homepage": "https://github.com/larsfrommars/infomarket",
+  "authors": [
+    "larsfrommars <larsfrommars@gmail.com>"
+  ],
+  "description": "Wikilike intranet.",
+  "moduleType": [
+    "amd"
+  ],
+  "license": "LGPL 2.1",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
