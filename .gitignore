@@ -32,3 +32,14 @@ bower_components
 
 # Mac
 .DS_Store
+
+# Gradle
+.gradle
+build/
+
+# eclipse build path
+bin/
+
+# Ignore Gradle GUI config
+gradle-app.setting
+
