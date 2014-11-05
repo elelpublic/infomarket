@@ -1,8 +1,14 @@
+var model = require('./model');
+exports.model = model.model;
+var schema = model.schema;
+
 exports.updateEntity = function( entity, req ) {
-  entity.keyword = req.body.keyword;
-  entity.visitCount = req.body.visitCount;
-  entity.timeCreated = req.body.timeCreated;
-  entity.lastModified = req.body.lastModified;
-  entity.stars = req.body.stars;
+  
+  for( var field in schema ) {
+    if( typeof req.body[ field ] !== 'undefined' ) {
+      entity[ field ] = req.body[ field ];
+    }
+  }
+  
 }      
 

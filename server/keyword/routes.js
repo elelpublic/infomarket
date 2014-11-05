@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();   // get an instance of the express Router
 var controller = require('./controller');
-var model = require('./model');
+var model = require('./model').model;
 var app = require('../app');
 
 router.route('/keywords')
