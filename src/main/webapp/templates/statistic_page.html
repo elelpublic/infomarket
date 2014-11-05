@@ -1,0 +1,39 @@
+<!-- statistic -->
+<div id="statistic" class="row-fluid" style="">
+    <div class="span5 _5aRxb">
+        <div class="_5aRxb-icon color-4"><i class="fa fa-users"></i></div>
+        <h4>{{captions.users}}</h4>
+        <table class="table table-bordered ns-hva table-custom-1">
+            <tbody>
+                <tr>
+                    <td width="80%"><a>Admin</a></td>
+                    <td width="10%"><span>10</span></td>
+                </tr>
+                <tr>
+                    <td width="80%"><a>User</a></td>
+                    <td width="10%"><span>422</span></td>
+                </tr>	
+                <tr>
+                    <td width="80%"><a>Andrew</a></td>
+                    <td width="10%"><span>6</span></td>
+                </tr>							
+            </tbody>						
+        </table>
+    </div>
+    <div class="span2 _5aRxb">
+        <h4 style="margin-bottom:10px;">{{captions.statistic}}</h4>
+        <i class="fa fa-pie-chart"></i>
+    </div>
+    <div class="span5 _5aRxb">
+        <div class="_5aRxb-icon color-5"><i class="fa fa-sliders"></i></div>
+        <h4>{{captions.categories}}</h4>
+        <table class="table table-bordered ns-hva table-custom-1">
+            <tbody>
+                <tr ng-repeat="sCategory in sCategories">
+                    <td width="80%"><a>{{sCategory.name}}</a></td>
+                    <td width="10%"><span>{{sCategory.count}}</span></td>
+                </tr>						
+            </tbody>						
+        </table>
+    </div>
+</div>
