@@ -43,3 +43,6 @@ bin/
 # Ignore Gradle GUI config
 gradle-app.setting
 
+# temporary for development only:
+src/main/webapp/infomarktplatz
+

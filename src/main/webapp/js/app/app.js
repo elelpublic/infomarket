@@ -7,9 +7,10 @@
     /*
         Application Initialization
     */
-    var app = angular.module('infomarktplatz', ['ngRoute', 'ngSanitize']);
+    var app = angular.module('infomarket', ['ngRoute', 'ngSanitize']);
     var currentLang = "en",
-        Root = '/projectile/api/infomarktplatz/';
+        Root = '/infomarket/';
+    var restBase = 'http://localhost:8080/projectile/';
 
     /*
         Application Config
@@ -414,7 +415,7 @@
     //Categories Service
     app.service('CategoriesService', function($http){
         this.list = function(callback){
-           $http.get('/projectile/rest/api/json/0/keywordcategories').success(function(r){
+           $http.get(restBase + 'rest/api/json/0/keywordcategories').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -424,7 +425,7 @@
         }
         
         this.find = function(pattern, callback){
-            $http.get('/projectile/rest/api/json/0/keywordcategories').success(function(r) {
+            $http.get(restBase + 'rest/api/json/0/keywordcategories').success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     var matches = r.Entries.filter(function(entry){
                         return (!isNaN(pattern) ? entry.id : entry.name) == pattern;
@@ -437,7 +438,7 @@
         }
         
         this.get = function(id, callback){
-            $http.get('/projectile/rest/api/json/0/keywordcategories/' + id).success(function(r) {
+            $http.get(restBase + 'rest/api/json/0/keywordcategories/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -450,7 +451,7 @@
     //Keywords Service
     app.service('KeywordsService', function($http){
         this.list = function(callback){
-           $http.get('/projectile/rest/api/json/0/keywords').success(function(r){
+           $http.get(restBase + 'rest/api/json/0/keywords').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -460,7 +461,7 @@
         }
         
         this.find = function(d, searchTarget, callback){
-            $http.get('/projectile/rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + d).success(function(r) {
+            $http.get(restBase + 'rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + d).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -470,7 +471,7 @@
         }
         
         this.get = function(id, callback){
-            $http.get('/projectile/rest/api/json/0/keywords/' + id).success(function(r) {
+            $http.get(restBase + 'rest/api/json/0/keywords/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -480,7 +481,7 @@
         }
         
         this.update = function(id, data, callback){
-            $http.put('/projectile/rest/api/json/0/keywords/' + id, data).success(function(r){
+            $http.put(restBase + 'rest/api/json/0/keywords/' + id, data).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -490,7 +491,7 @@
         }
         
         this.visit = function(id, callback){
-            $http.post('/projectile/rest/api/json/0/visits', {keyword: id}).success(function(r){
+            $http.post(restBase + 'rest/api/json/0/visits', {keyword: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -504,7 +505,7 @@
     //InfoNodes Service
     app.service('InfoNodesService', function($http){
         this.list = function(id, callback){
-            $http.get('/projectile/rest/api/json/0/infonodes?keyword='+ id).success(function(r){
+            $http.get(restBase + 'rest/api/json/0/infonodes?keyword='+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -514,7 +515,7 @@
         }
         
         this.get = function(id, callback, data){
-            var _uri = '/projectile/rest/api/json/0/infonodes';
+            var _uri = restBase + 'rest/api/json/0/infonodes';
             if(data && Object.keys(data).length > 0){
                 var i = 0;
                 for(e in data){
@@ -536,7 +537,7 @@
         }
         
         this.create = function(data, callback){
-            $http.post('/projectile/rest/api/json/0/infonodes', data).success(function(r){
+            $http.post(restBase + 'rest/api/json/0/infonodes', data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -547,7 +548,7 @@
         }
         
         this.update = function(id, data, callback){
-            $http.put('/projectile/rest/api/json/0/infonodes/' + id, data).success(function(r){
+            $http.put(restBase + 'rest/api/json/0/infonodes/' + id, data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;}
                 }else{
@@ -559,7 +560,7 @@
         
         this.star = function(id, callback){
             //star / unstar action
-            $http.post('/projectile/rest/api/json/0/stars', {infoNode: id}).success(function(r){
+            $http.post(restBase + 'rest/api/json/0/stars', {infoNode: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback({status:'starred'});}else{return true;};
                 }else{
@@ -569,7 +570,7 @@
         }
         
         this.delete = function(id, callback){
-            $http.delete('/projectile/rest/api/json/0/infonodes/' + id).success(function(r){
+            $http.delete(restBase + 'rest/api/json/0/infonodes/' + id).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -583,7 +584,7 @@
     //SoftLinks Service
     app.service('SoftLinksService', function($http){
         this.list = function(id, callback){
-            $http.get('/projectile/rest/api/json/0/softlinks?keyword=' + id).success(function(r){
+            $http.get(restBase + 'rest/api/json/0/softlinks?keyword=' + id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -593,7 +594,7 @@
         }
         
         this.get = function(id, callback){
-            $http.get('/projectile/rest/api/json/0/softlinks/'+ id).success(function(r){
+            $http.get(restBase + 'rest/api/json/0/softlinks/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -606,7 +607,7 @@
     //Users Service
     app.service('UsersService', function($http){
         this.get = function(id, callback){
-            $http.get('/projectile/rest/api/json/0/employees/'+ id).success(function(r){
+            $http.get(restBase + 'rest/api/json/0/employees/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{

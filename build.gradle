@@ -45,6 +45,25 @@ dependencies {
 
 }
 
+def warArchiveName = 'infomarket.war'
+
+war {
+	archiveName = warArchiveName
+	from( '.' ) {
+		include 'bower_components/**'
+		exclude 'bower_components/jquery/src/**'
+	}
+}
+
+task projectile ( dependsOn: 'war', type: Copy ) {
+	from '' + buildDir + '/libs/' + warArchiveName
+	into '../dists/current/thirdparty/tomcat/webapps/'
+	doLast {
+		println 'finished'
+	}
+}
+
+
 eclipse {
   classpath {
     //customizing the classes output directory:
