@@ -55,12 +55,23 @@ war {
 	}
 }
 
-task projectile ( dependsOn: 'war', type: Copy ) {
+task projectileWar ( dependsOn: 'war', type: Copy ) {
 	from '' + buildDir + '/libs/' + warArchiveName
 	into '../dists/current/thirdparty/tomcat/webapps/'
 	doLast {
 		println 'finished'
 	}
+}
+
+
+task projectile ( dependsOn: 'war', type: Copy ) {
+	
+	def zipFile = file( '' + buildDir + '/libs/' + warArchiveName )
+	def outputDir = file( '../dists/current/thirdparty/tomcat/webapps/projectile/infomarket' )
+
+	from zipTree(zipFile)
+	into outputDir
+
 }
 
 
