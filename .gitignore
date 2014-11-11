@@ -46,3 +46,4 @@ gradle-app.setting
 # temporary for development only:
 src/main/webapp/infomarktplatz
 
+/eclipse-build/
