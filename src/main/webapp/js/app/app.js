@@ -52,74 +52,84 @@
         @Main Controller
         (is declared on index page and it's called "parent" for other controllers)
     */
-    app.controller('MainController', function ($scope, $http, $routeParams) {
-        var captions = {};
-   	    captions.en = {
-            newEntry: 'New Entry',
-            livePreview: 'Live Preview',
-            keyword: 'Keyword',
-            category: 'Category',
-            textLabel: 'Text',
-            files: 'Files',
-            submit: 'Submit',
-            message: 'Message',
-            addFav: 'Star this Entry',
-            addFavMsg: 'Infonod was succefully starred',
-            addFavAllreadyMsg: 'Infonode was allready starred',
-            remFav: 'Unstar this Entry',
-            remFavMsg: 'Infonode was unstarred',
-            star_unstar: 'Star',
-            getInfobitLink: 'Get Link',
-            editEntry: 'Edit Entry',
-            confirmation: 'Confirmation',
-            removeConfirmationText: 'Are you sure that you want to remove this Infobit?',
-            ok: 'OK',
-            yes: 'Yes',
-            no: 'No',
-            cancel: 'Cancel',
-            keywordNameTitle: 'Change the keyword name',
-            keywordNameText: 'Write the new keyword name bellow:',
-            keywordNameInfo: function(num1){return 'Information: <em>' + num1 + ' '+ (num1 == 1 ? 'infobit' : 'infobits') + '</em> linked to this keyword founded.';},
-            add: 'Add',
-            addD: 'Add new Infobit',
-            addK: 'Add new Keyword',
-            edit: 'Edit',
-            refresh: 'Refresh',
-            duplicate: 'Duplicate',
-            remove: 'Remove',
-            user: 'User',
-            date: 'Date',
-            last_change: 'Last Change',
-            history1: 'Von hier aus besucht:',
-            history2: 'Hierher gekommen von:',
-            historyT: 'Softlinks',
-            favEntries: 'Popular Entries',
-            recentEntries: 'Recent Keywords',
-            lastNews: 'Last News', 
-            smallStatisticLabel: 'Gesamtstatistik',
-            smallStatistic: function(num1, num2, num3){ return num1 + " " + (num1 == 1 ? "Keyword" : "Keywords") + ", " + num2 + " " + (num2 == 1 ? "Infonode" : "Infonodes") + ", " + num3 + " " + (num3 == 1 ? "Softlink" : "Softlinks")},
-            statistic: 'Statistic',
-            showRandomText: 'Show a random Keyword List',
-            users: 'Users',
-            categories: 'Categories',
-            search: 'Search',
-            searchPlaceholder: 'Enter a keyword to search',
-            sortByCategories: 'Sort by Categories',
-            sortInfondesT: 'Sort Infonodes',
-            searchResultText: 'Searches related to',
-            searchNoResults: 'Didn\'t find what you were looking for',
-            searchFailText: 'Sorry, no results found for:',
-            success: 'Success',
-            nodeSCreatedT: 'Infonode was succefully created',
-            nodeSEditedT: 'Infonode was succefully edited',
+    app.controller('MainController', function ($scope, $http, $routeParams, CaptionsService) {
+        var captions = {
+            newEntry: ["Document|New Entry",""],
+            livePreview: ["Document|Live Preview",""],
+            keyword: ["Document|Keyword",""],
+            keywords: ["Document|Keywords",""],
+            infoNode: ["Document|Infonode",""],
+            infoNodes: ["Document|Infonodes",""],
+            softLink: ["Document|Softlink",""],
+            softLinks: ["Document|Softlinks",""],
+            category: ["Document|Category",""],
+            textLabel: ["Document|Text",""],
+            files: ["Document|Files",""],
+            submit: ["Document|Submit",""],
+            message: ["Document|Message",""],
+            addFav: ["Document|Star this Entry",""],
+            addFavMsg: ["Document|Infonod was succefully starred",""],
+            addFavAllreadyMsg: ["Document|Infonode was allready starred",""],
+            remFav: ["Document|Unstar this Entry",""],
+            remFavMsg: ["Document|Infonode was unstarred",""],
+            star_unstar: ["Document|Star",""],
+            getInfobitLink: ["Document|Get Link",""],
+            editEntry: ["Document|Edit Entry",""],
+            confirmation: ["Document|Confirmation",""],
+            removeConfirmationText: ["Document|Are you sure that you want to remove this Infobit?",""],
+            ok: ["Document|OK",""],
+            yes: ["Document|Yes",""],
+            no: ["Document|No",""],
+            cancel: ["Document|Cancel",""],
+            keywordNameTitle: ["Document|Change the keyword name",""],
+            keywordNameText: ["Document|Write the new keyword name bellow:",""],
+            add: ["Document|Add",""],
+            addD: ["Document|Add new Infobit",""],
+            addK: ["Document|Add new Keyword",""],
+            edit: ["Document|Edit",""],
+            refresh: ["Document|Refresh",""],
+            duplicate: ["Document|Duplicate",""],
+            remove: ["Document|Remove",""],
+            user: ["Document|User",""],
+            date: ["Document|Date",""],
+            last_change: ["Document|Last Change",""],
+            favEntries: ["InfoMarket|Favourite key words",""],
+            recentEntries: ["Document|Recent Keywords",""],
+            lastNews: ["Document|Last News",""],
+            smallStatisticLabel: ["Document|Gesamtstatistik",""],
+            statistic: ["Document|Statistic",""],
+            showRandomText: ["Document|Show a random Keyword List",""],
+            users: ["Document|Users",""],
+            categories: ["InfoMarket|Categories",""],
+            search: ["InfoMarket|Find",""],
+            searchPlaceholder: ["Document|Enter a keyword to search",""],
+            sortByCategories: ["Document|Sort by Categories",""],
+            sortInfondesT: ["Document|Sort Infonodes",""],
+            searchResultText: ["Document|Searches related to",""],
+            searchNoResults: ["Document|Did not find what you were looking for",""],
+            searchFailText: ["Document|Sorry, no results found for:",""],
+            success: ["Document|Success",""],
+            nodeSCreatedT: ["Document|Infonode was succefully created",""],
+            nodeSEditedT: ["Document|Infonode was succefully edited",""],
+            leghtLimitLeft: ["Document|Characters left",""],
+            backToTop: ["Document|Back To Top",""]
         };
-        captions.de = {
-            
-        };
-        captions.pt = {
-             
-        };
-        $scope.captions = captions[currentLang];
+        var data = "",
+            i = 0;
+        for(key in captions){
+            var value = captions[key],
+                param = (i == 0 ? '?' : '&');
+            data += param + 'id=' + value[0];
+            i++;
+        }
+        CaptionsService.get(data, function(data){
+            var i = 0;
+            for(key in captions){
+                captions[key] = data.Entries[i].translation;
+                i++;
+            }
+            $scope.captions = captions;
+        });
         
         loadJqueryFn('all');
     });
@@ -138,6 +148,7 @@
         });
         InfoNodesService.get(null, function(data){
             var lastKeywords = [];
+            data.Entries.reverse();
             var filter = data.Entries.filter( function(r){
                 if(lastKeywords.indexOf(r.keyword) == -1){
                     lastKeywords.push(r.keyword);
@@ -155,7 +166,7 @@
                 num2 = 0,
                 num3 = 0;
             
-            return $scope.captions.smallStatistic(num1,num2,num3);       
+            return num1 + ' ' + $scope.captions.keywords + ', ' + num2 + ' ' + $scope.captions.infoNodes + ', ' + num3 + ' ' + $scope.captions.softLinks;       
         };
         
         $scope.randomEntry = function(){
@@ -222,7 +233,7 @@
                     modal({
                         type: 'prompt',
                         title: $scope.captions.keywordNameTitle,
-                        text:  $scope.captions.keywordNameText + '<p class="muted" style="font-size:10px;">'+ $scope.captions.keywordNameInfo($scope.infobits.length) +'</p>',
+                        text:  $scope.captions.keywordNameText,
                         buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel},
                         callback: function(e){
                             if(e){
@@ -324,11 +335,13 @@
 
                 if(_zhType == 'edit'){
                     $scope.page_title = $scope.captions.editEntry;
+                    $scope.page_title_icon = 'fa-pencil-square-o';
                     $scope.date = $scope.infobit.createdTime;
                     $scope.last_change = new Date();
                     $scope.post_user = $scope.infobit.owner;
                 }else if(_zhType == 'duplicate'){
                     $scope.page_title = $scope.captions.newEntry;
+                    $scope.page_title_icon = 'fa-files-o';
                     $scope.date = new Date();
                 }
                 setTimeout(function(){$('textarea._4aS').trigger('autosize.resize')}, 10);
@@ -341,6 +354,7 @@
             });
         }else{
             $scope.page_title = $scope.captions.newEntry;
+            $scope.page_title_icon = 'fa-plus-circle';
             $scope.date = new Date();
             
             var callback = function(data){
@@ -413,9 +427,9 @@
     */
     
     //Categories Service
-    app.service('CategoriesService', function($http){
+    app.service('CategoriesService', function($http, AjaxService){
         this.list = function(callback){
-           $http.get(restBase + 'rest/api/json/0/keywordcategories').success(function(r){
+           AjaxService.send('get', restBase + 'rest/api/json/0/keywordcategories').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -425,7 +439,7 @@
         }
         
         this.find = function(pattern, callback){
-            $http.get(restBase + 'rest/api/json/0/keywordcategories').success(function(r) {
+            AjaxService.send('get', restBase + 'rest/api/json/0/keywordcategories').success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     var matches = r.Entries.filter(function(entry){
                         return (!isNaN(pattern) ? entry.id : entry.name) == pattern;
@@ -438,7 +452,7 @@
         }
         
         this.get = function(id, callback){
-            $http.get(restBase + 'rest/api/json/0/keywordcategories/' + id).success(function(r) {
+            AjaxService.send('get', restBase + 'rest/api/json/0/keywordcategories/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -449,9 +463,9 @@
     });
     
     //Keywords Service
-    app.service('KeywordsService', function($http){
+    app.service('KeywordsService', function($http, AjaxService){
         this.list = function(callback){
-           $http.get(restBase + 'rest/api/json/0/keywords').success(function(r){
+            AjaxService.send('get', restBase + 'rest/api/json/0/keywords').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -461,7 +475,7 @@
         }
         
         this.find = function(d, searchTarget, callback){
-            $http.get(restBase + 'rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + d).success(function(r) {
+            AjaxService.send('get', restBase + 'rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + d).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -471,7 +485,7 @@
         }
         
         this.get = function(id, callback){
-            $http.get(restBase + 'rest/api/json/0/keywords/' + id).success(function(r) {
+            AjaxService.send('get', restBase + 'rest/api/json/0/keywords/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -481,7 +495,7 @@
         }
         
         this.update = function(id, data, callback){
-            $http.put(restBase + 'rest/api/json/0/keywords/' + id, data).success(function(r){
+            AjaxService.send('put',  restBase + 'rest/api/json/0/keywords/' + id, data).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -491,7 +505,7 @@
         }
         
         this.visit = function(id, callback){
-            $http.post(restBase + 'rest/api/json/0/visits', {keyword: id}).success(function(r){
+            AjaxService.send('post', restBase + 'rest/api/json/0/visits', {keyword: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -503,9 +517,9 @@
     });
     
     //InfoNodes Service
-    app.service('InfoNodesService', function($http){
+    app.service('InfoNodesService', function($http, AjaxService){
         this.list = function(id, callback){
-            $http.get(restBase + 'rest/api/json/0/infonodes?keyword='+ id).success(function(r){
+            AjaxService.send('get', restBase + 'rest/api/json/0/infonodes?keyword='+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -527,7 +541,7 @@
             }else{
                 _uri += '/' + id;
             }
-            $http.get(_uri).success(function(r){
+            AjaxService.send('get', _uri).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r,(data ? data : null));}else{return true;};
                 }else{
@@ -537,7 +551,7 @@
         }
         
         this.create = function(data, callback){
-            $http.post(restBase + 'rest/api/json/0/infonodes', data).success(function(r){
+            AjaxService.send('post', restBase + 'rest/api/json/0/infonodes', data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -548,7 +562,7 @@
         }
         
         this.update = function(id, data, callback){
-            $http.put(restBase + 'rest/api/json/0/infonodes/' + id, data).success(function(r){
+            AjaxService.send('put',  restBase + 'rest/api/json/0/infonodes/' + id, data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;}
                 }else{
@@ -560,7 +574,7 @@
         
         this.star = function(id, callback){
             //star / unstar action
-            $http.post(restBase + 'rest/api/json/0/stars', {infoNode: id}).success(function(r){
+            AjaxService.send('post', restBase + 'rest/api/json/0/stars', {infoNode: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback({status:'starred'});}else{return true;};
                 }else{
@@ -570,7 +584,7 @@
         }
         
         this.delete = function(id, callback){
-            $http.delete(restBase + 'rest/api/json/0/infonodes/' + id).success(function(r){
+            AjaxService.send('delete', restBase + 'rest/api/json/0/infonodes/' + id).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -582,9 +596,9 @@
     });
     
     //SoftLinks Service
-    app.service('SoftLinksService', function($http){
+    app.service('SoftLinksService', function($http, AjaxService){
         this.list = function(id, callback){
-            $http.get(restBase + 'rest/api/json/0/softlinks?keyword=' + id).success(function(r){
+            AjaxService.send('get', restBase + 'rest/api/json/0/softlinks?keyword=' + id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -594,7 +608,7 @@
         }
         
         this.get = function(id, callback){
-            $http.get(restBase + 'rest/api/json/0/softlinks/'+ id).success(function(r){
+            AjaxService.send('get', restBase + 'rest/api/json/0/softlinks/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -605,9 +619,9 @@
     });
     
     //Users Service
-    app.service('UsersService', function($http){
+    app.service('UsersService', function($http, AjaxService){
         this.get = function(id, callback){
-            $http.get(restBase + 'rest/api/json/0/employees/'+ id).success(function(r){
+            AjaxService.send('get', restBase + 'rest/api/json/0/employees/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -618,7 +632,7 @@
     });
     
     //Others Service
-    app.service('OthersService', function($http, KeywordsService){
+    app.service('OthersService', function($http, KeywordsService, AjaxService){
         this.keywordSearchAction = function(data, captions){
             var c = $('._5sB'),
                 f = c.find('#searchForm'),
@@ -683,6 +697,26 @@
                 $toggleLoader();
             });
         }
+    });
+    
+    //Captions Service
+    app.service('CaptionsService', function($http, AjaxService){
+        this.get = function(captions, callback){
+            AjaxService.send('get', restBase + 'rest/api/json/0/captions' + captions).success(function(data){
+                callback(data);
+            });  
+        }
+    });
+    
+    //Ajax Service
+    app.service('AjaxService', function($http){
+        this.send = function(_method, _uri, _data){
+            return $http[_method](
+                _uri ? _uri : null, //url
+                _data ? _data : { params: {apiKeyCode: 123456789} }, //data
+                { params: {apiKeyCode: 123456789} } //config options
+            );
+        };
     });
     
     /*
@@ -773,6 +807,34 @@
         return results === null ? false : decodeURIComponent(results[1].replace(/\+/g, " "));
     }
     
+    function backToTopFn(){
+        $(window).scroll(function(){;
+            if($(window).scrollTop() > Math.floor($(window).height() / 2.5) && $(window).height() > 100){
+                $('.scrollUpDownBtn').fadeIn(250);  
+            }else{
+                $('.scrollUpDownBtn').stop(true).fadeOut(250);   
+            }
+        });
+        $('.scrollUpDownBtn').on('click', function(e){
+            e.preventDefault();
+            $("body").stop(true).animate({scrollTop: 0}, 'fast');
+        });
+    }
+    
+    function scrollToInfoNode(){
+        var $hash_link = location.hash;
+        if($hash_link.search(/\#\/list\//) > -1 && getParameterByName('infoNodeId', true)){
+            var $param = getParameterByName('infoNodeId', true),
+                $item = $('._5lBp > li[data-item-id^="'+$param+'"]');
+            if($item.size() > 0){
+                $item.css('opacity','1').css('background-color','#FFF8D0');
+                $("body").animate({scrollTop: $item.offset().top - 15}, "slow", function(){
+                    $item.css('background-color','#fff');
+                });
+            }
+        }
+    }
+    
     function loadJqueryFn(k){
         if(k == 'all'){
             return true;
@@ -781,42 +843,33 @@
             $('*[data-title]').tipsy({arrow:'center'});
             $('a.lightbox').iLightbox();
             
-            var scrollToInfoNode = function(){
-                var $hash_link = location.hash;
-                if($hash_link.search(/\#\/list\//) > -1 && getParameterByName('infoNodeId', true)){
-                    var $param = getParameterByName('infoNodeId', true),
-                        $item = $('._5lBp > li[data-item-id^="'+$param+'"]');
-                    if($item.size() > 0){
-                        $item.css('opacity','1').css('background-color','#FFF8D0');
-                        $("body").animate({scrollTop: $item.offset().top - 15}, "slow", function(){
-                            $item.css('background-color','#fff');
-                        });
-                    }
-                }
-            }
             scrollToInfoNode();
             
             return true;
         }
         
+        /* enable tipsy */
         $('*[data-title]').tipsy({arrow:'center'});
         
+        /* enable lightbox */
         $('a.lightbox').iLightbox();
 	
-	    /* form */
+	    /* enable textarea autosize & BBCodes */
 		$('textarea._4aS').autosize().bbCode();
         
+        /* enable characters length counter */
         $('textarea._4aS[maxlength]').on("keyup focus input propertychange", function (e) {
             var maxlength = $(this).attr('maxlength'),
                 numberOfLineBreaks = ($(this).val().match(/\n/g)||[]).length,
                 left = maxlength - $(this).val().length - numberOfLineBreaks,
                 left = left < 0 ? 0 : left;
-            if($(this).next('span.help-block').size() == 0){
-                $(this).after('<span class="help-block pull-right">Characters left: '+ left +'</span>'); 
-            }else{
-                $(this).next('span.help-block').text('Characters left: ' + left);
-            }
+            
+            $(this).next('span.help-block').find('i').text(left);
+            $(this).next('span.help-block').slideDown(250)
         });
+        
+        /* enable backToTop Button */
+        backToTopFn();
     }
     //if(!inIframe()){window.location = 'http://google.com'}
 })();
