@@ -8,9 +8,9 @@
         Application Initialization
     */
     var app = angular.module('infomarket', ['ngRoute', 'ngSanitize']);
-    var currentLang = "en",
-        Root = '/infomarket/';
-    var restBase = 'http://localhost:8080/projectile/';
+    var Root = '/infomarket/',
+        restBase = '/projectile/',
+        getLinkURI = restBase + 'start#!/app/infomarket#/list/';
 
     /*
         Application Config
@@ -63,6 +63,7 @@
             softLink: ["Document|Softlink",""],
             softLinks: ["Document|Softlinks",""],
             category: ["Document|Category",""],
+            categories: ["InfoMarket|Categories",""],
             textLabel: ["Document|Text",""],
             files: ["Document|Files",""],
             submit: ["Document|Submit",""],
@@ -70,8 +71,6 @@
             addFav: ["Document|Star this Entry",""],
             addFavMsg: ["Document|Infonod was succefully starred",""],
             addFavAllreadyMsg: ["Document|Infonode was allready starred",""],
-            remFav: ["Document|Unstar this Entry",""],
-            remFavMsg: ["Document|Infonode was unstarred",""],
             star_unstar: ["Document|Star",""],
             getInfobitLink: ["Document|Get Link",""],
             editEntry: ["Document|Edit Entry",""],
@@ -93,17 +92,18 @@
             user: ["Document|User",""],
             date: ["Document|Date",""],
             last_change: ["Document|Last Change",""],
-            favEntries: ["InfoMarket|Favourite key words",""],
+            favEntries: ["InfoMarket|Favorite keywords",""],
             recentEntries: ["Document|Recent Keywords",""],
             lastNews: ["Document|Last News",""],
-            smallStatisticLabel: ["Document|Gesamtstatistik",""],
+            smallStatisticLabel: ["Document|General Statistic",""],
             statistic: ["Document|Statistic",""],
-            showRandomText: ["Document|Show a random Keyword List",""],
+            showRandomText: ["Document|Show a random Infonodes List",""],
             users: ["Document|Users",""],
-            categories: ["InfoMarket|Categories",""],
             search: ["InfoMarket|Find",""],
             searchPlaceholder: ["Document|Enter a keyword to search",""],
             sortByCategories: ["Document|Sort by Categories",""],
+            sortByDate: ["Document|Sort by Date",""],
+            sortByStars: ["Document|Sort by Stars",""],
             sortInfondesT: ["Document|Sort Infonodes",""],
             searchResultText: ["Document|Searches related to",""],
             searchNoResults: ["Document|Did not find what you were looking for",""],
@@ -114,15 +114,8 @@
             leghtLimitLeft: ["Document|Characters left",""],
             backToTop: ["Document|Back To Top",""]
         };
-        var data = "",
-            i = 0;
-        for(key in captions){
-            var value = captions[key],
-                param = (i == 0 ? '?' : '&');
-            data += param + 'id=' + value[0];
-            i++;
-        }
-        CaptionsService.get(data, function(data){
+        
+        CaptionsService.get(captions, function(data){
             var i = 0;
             for(key in captions){
                 captions[key] = data.Entries[i].translation;
@@ -228,6 +221,8 @@
                 SoftLinksService.list($scope.keyword.id, function(data){
                     $scope.softLinksList = data.Entries;
                 });
+                
+                $scope.getLinkURI = getLinkURI;
                 
                 $scope.keywordEdit = function(){
                     modal({
@@ -702,7 +697,15 @@
     //Captions Service
     app.service('CaptionsService', function($http, AjaxService){
         this.get = function(captions, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/captions' + captions).success(function(data){
+            var data = "",
+                first = true;
+            for(key in captions){
+                var value = captions[key],
+                    param = (first ? '?' : '&');
+                data += param + 'id=' + value[0];
+                first = false;
+            }
+            AjaxService.send('get', restBase + 'rest/api/json/0/captions' + data).success(function(data){
                 callback(data);
             });  
         }
@@ -712,9 +715,9 @@
     app.service('AjaxService', function($http){
         this.send = function(_method, _uri, _data){
             return $http[_method](
-                _uri ? _uri : null, //url
-                _data ? _data : { params: {apiKeyCode: 123456789} }, //data
-                { params: {apiKeyCode: 123456789} } //config options
+                _uri ? _uri : null,
+                _data ? _data : { params: {apiKeyCode: 0} },
+                { params: {apiKeyCode: 0} }
             );
         };
     });
