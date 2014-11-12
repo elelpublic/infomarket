@@ -718,7 +718,9 @@
                 _uri ? _uri : null,
                 _data ? _data : { params: {apiKeyCode: 0} },
                 { params: {apiKeyCode: 0} }
-            );
+            ).error(function(a,b){
+                window.location = Root + '404.html?statusCode=' + b;
+            });
         };
     });
     
