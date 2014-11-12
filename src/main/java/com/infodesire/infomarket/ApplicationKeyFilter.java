@@ -3,6 +3,8 @@
 
 package com.infodesire.infomarket;
 
+import com.google.common.base.Strings;
+
 import java.io.IOException;
 import java.util.Properties;
 
@@ -25,21 +27,23 @@ public class ApplicationKeyFilter implements Filter {
 
   @Override
   public void destroy() {
-    // TODO Auto-generated method stub
-    
   }
 
   @Override
   public void doFilter( ServletRequest request, ServletResponse response,
     FilterChain chain ) throws IOException, ServletException {
+    
+    String applicationKey = KeyStore.getKey();
 
-    if( request instanceof HttpServletRequest ) {
-      
-      RequestWithAddedHeaders newRequest = new RequestWithAddedHeaders(
-        (HttpServletRequest) request );
-      newRequest.addHeader( "x-application-key", "dummy" );
-      request = newRequest;
-
+    if( !Strings.isNullOrEmpty( applicationKey ) ) {
+      if( request instanceof HttpServletRequest ) {
+        
+        RequestWithAddedHeaders newRequest = new RequestWithAddedHeaders(
+          (HttpServletRequest) request );
+        newRequest.addHeader( "x-application-key", applicationKey );
+        request = newRequest;
+        
+      }
     }
     
     chain.doFilter( request, response );
@@ -48,6 +52,8 @@ public class ApplicationKeyFilter implements Filter {
 
   @Override
   public void init( FilterConfig arg0 ) throws ServletException {
+
+    KeyStore.reload();
     
     Properties properties = new Properties();
     properties.put( "log4j.logger.org.apache", "WARN" );

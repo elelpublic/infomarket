@@ -60,12 +60,17 @@ public class RequestWithAddedHeaders extends HttpServletRequestWrapper {
   @SuppressWarnings("rawtypes")
   @Override
   public Enumeration getHeaderNames() {
-   
-    @SuppressWarnings("unchecked")
-    Iterator<String> parentNames = new EnumerationIterator( super.getHeaderNames() );
-    Iterator<String> addedNames = headers.keySet().iterator();
-    Iterator<String> allNames = Iterators.concat( parentNames, addedNames );
-    return Iterators.asEnumeration( allNames );    
+    
+    if( headers.isEmpty() ) {
+      return super.getHeaderNames();
+    }
+    else {
+      @SuppressWarnings("unchecked")
+      Iterator<String> parentNames = new EnumerationIterator( super.getHeaderNames() );
+      Iterator<String> addedNames = headers.keySet().iterator();
+      Iterator<String> allNames = Iterators.concat( parentNames, addedNames );
+      return Iterators.asEnumeration( allNames );    
+    }
 
   }
 
