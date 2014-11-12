@@ -11,13 +11,8 @@ body {
     background-color: #ebeeed;
     word-break: break-word;
     text-rendering: optimizelegibility;
+    margin-bottom: 25px;
 }
-
-.bsmicon-15 {
-  font-size: 15px;
-  width: 20px;
-}
-
 
 a,
 a:hover,
@@ -33,6 +28,10 @@ a:focus {
 a.ns-underline:hover,
 a.ns-underline:active{
     text-decoration: underline;
+}
+
+form {
+    margin: 0;
 }
 
 input[type=checkbox],input[type=radio] {
@@ -171,11 +170,25 @@ blockquote {
     margin-bottom: 0px;
 }
 
+.btn.btn-with-icon-l i{
+    margin-right: 5px;
+}
+
+.btn.btn-with-icon-r i{
+    margin-left: 5px;
+}
+
 /*
 	==============================
         * Infomarktplatz Code *
 	==============================
 */
+.bsmicon-15 {
+    font-size: 16px;
+    margin-right: 10px;
+    vertical-align: top;
+}
+
 ._3tH,._3mB {
     background-color: #fff;
     position: relative;
@@ -207,7 +220,7 @@ blockquote {
 ._3cmB {
     background: #fff;
     padding: 20px 25px;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     border-radius: 3px;
     box-shadow: 0 1px 8px rgba(0,0,0,0.05);
 }
@@ -347,8 +360,10 @@ blockquote {
 
 ._4aS + span.help-block {
     color: #999;
-    margin-top: -5px;
     font-size: 12px;
+    margin-bottom: 0;
+    *margin-top: -5px;
+    text-align: right;
 }
 
 ._5sB {
@@ -590,7 +605,7 @@ blockquote {
     display: block;
 }
 
-._5aRxb .table-custom-1:not(.ns-hva) tr td:first-child:hover {
+._5aRxb .table-custom-1:not(.ns-hva) tr td:first-child:not(.ns-khva):hover {
     background-color: #FFF8D0;
 }
 
