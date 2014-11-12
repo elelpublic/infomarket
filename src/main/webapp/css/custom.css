@@ -818,3 +818,23 @@ blockquote {
     -moz-box-shadow: inset 0 0px 10px #eee;
     box-shadow: inset 0 0px 10px #eee;
 }
+
+.scrollUpDownBtn {
+    position: fixed;
+    bottom: 25px;
+    right: 35px;
+    z-index: 551;
+    text-align: center;
+    font-size: 9px;
+    color: rgba(0,0,0,0.5);
+    display: none;
+}
+
+.scrollUpDownBtn:hover {
+    color: rgba(0,0,0,0.8);
+}
+
+.scrollUpDownBtn i[class^="fa"]{
+    display: block;
+    font-size: 36px;
+}
