@@ -54,71 +54,71 @@
     */
     app.controller('MainController', function ($scope, $http, $routeParams, CaptionsService) {
         var captions = {
-            newEntry: ["Document|New Entry",""],
-            livePreview: ["Document|Live Preview",""],
-            keyword: ["Document|Keyword",""],
-            keywords: ["Document|Keywords",""],
-            infoNode: ["Document|Infonode",""],
-            infoNodes: ["Document|Infonodes",""],
+            newEntry: ["InfoMarket|New entry",""],
+            livePreview: ["Tooltip|Preview",""],
+            keyword: ["InfoMarket|KeyWord",""],
+            keywords: ["InfoMarket|KeyWords",""],
+            infoNode: ["InfoMarket|InfoNode",""],
+            infoNodes: ["InfoMarket|InfoNodes",""],
             softLink: ["Document|Softlink",""],
             softLinks: ["Document|Softlinks",""],
-            category: ["Document|Category",""],
+            category: ["InfoMarket|Category",""],
             categories: ["InfoMarket|Categories",""],
-            textLabel: ["Document|Text",""],
-            files: ["Document|Files",""],
-            submit: ["Document|Submit",""],
-            message: ["Document|Message",""],
-            addFav: ["Document|Star this Entry",""],
-            addFavMsg: ["Document|Infonod was succefully starred",""],
-            addFavAllreadyMsg: ["Document|Infonode was allready starred",""],
-            star_unstar: ["Document|Star",""],
-            getInfobitLink: ["Document|Get Link",""],
-            editEntry: ["Document|Edit Entry",""],
-            confirmation: ["Document|Confirmation",""],
-            removeConfirmationText: ["Document|Are you sure that you want to remove this Infobit?",""],
+            textLabel: ["Document|Body",""],
+            files: ["Tooltip|Files",""],
+            submit: ["Tooltip|Save",""],
+            message: ["System|Hint",""],
+            addFav: ["InfoMarket|Add a star for useful information",""],
+            addFavMsg: ["InfoMarket|Infonode was succefully rated",""],
+            addFavAllreadyMsg: ["InfoMarket|You cannot assign this star now",""],
+            star_unstar: ["InfoMarket|Rate",""],
+            getInfobitLink: ["Tooltip|Show external url",""],
+            editEntry: ["InfoMarket|Edit info node",""],
+            confirmation: ["Tooltip|Confirm",""],
+            removeConfirmationText: ["${Phrases:Really delete $0 ?}:::${InfoMarket:InfoNode}",""],
             ok: ["Document|OK",""],
             yes: ["Document|Yes",""],
-            no: ["Document|No",""],
+            no: ["Tooltip|No",""],
             cancel: ["Document|Cancel",""],
-            keywordNameTitle: ["Document|Change the keyword name",""],
-            keywordNameText: ["Document|Write the new keyword name bellow:",""],
-            add: ["Document|Add",""],
-            addD: ["Document|Add new Infobit",""],
-            addK: ["Document|Add new Keyword",""],
-            edit: ["Document|Edit",""],
-            refresh: ["Document|Refresh",""],
-            duplicate: ["Document|Duplicate",""],
+            keywordNameTitle: ["InfoMarket|New keyword",""],
+            keywordNameText: ["${Phrases:Please enter $0}:::${InfoMarket:New keyword name}",""],
+            add: ["Tooltip|Add",""],
+            addD: ["${Phrases:Add%20$0}:::${InfoMarket:InfoNode}",""],
+            addK: ["${Phrases:Add%20$0}:::${InfoMarket:KeyWord}",""],
+            edit: ["Tooltip|Edit",""],
+            refresh: ["System|reload",""],
+            duplicate: ["Tooltip|Duplicate",""],
             remove: ["Document|Remove",""],
-            user: ["Document|User",""],
+            user: ["InfoMarket|User",""],
             date: ["Document|Date",""],
-            last_change: ["Document|Last Change",""],
-            favEntries: ["InfoMarket|Favorite keywords",""],
-            recentEntries: ["Document|Recent Keywords",""],
-            lastNews: ["Document|Last News",""],
-            smallStatisticLabel: ["Document|General Statistic",""],
-            statistic: ["Document|Statistic",""],
-            showRandomText: ["Document|Show a random Infonodes List",""],
+            last_change: ["InfoMarket|Last modified",""],
+            favEntries: ["InfoMarket|Favourite key words",""],
+            recentEntries: ["InfoMarket|Latest key words",""],
+            lastNews: ["InfoMarket|News board",""],
+            smallStatisticLabel: ["InfoMarket|Total Statistics:",""],
+            statistic: ["Tooltip|Statistics",""],
+            showRandomText: ["Tooltip|Show random key word",""],
             users: ["Document|Users",""],
             search: ["InfoMarket|Find",""],
-            searchPlaceholder: ["Document|Enter a keyword to search",""],
-            sortByCategories: ["Document|Sort by Categories",""],
-            sortByDate: ["Document|Sort by Date",""],
-            sortByStars: ["Document|Sort by Stars",""],
-            sortInfondesT: ["Document|Sort Infonodes",""],
-            searchResultText: ["Document|Searches related to",""],
-            searchNoResults: ["Document|Did not find what you were looking for",""],
-            searchFailText: ["Document|Sorry, no results found for:",""],
+            searchPlaceholder: ["InfoMarket|Enter a keyword to search",""],
+            sortByDate: ["InfoMarket|Sort by date",""],
+            sortByStars: ["InfoMarket|Sort by stars",""],
+            sort: ["Tooltip|Sort",""],
+            sortInfoNodes: ["InfoMarket|Sort InfoNodes",""],
+            searchResultText: ["InfoMarket|Search result",""],
+            searchNoResults: ["InfoMarket|Did not find what you were looking for",""],
+            searchFailText: ["InfoMarket|No results found for",""],
             success: ["Document|Success",""],
-            nodeSCreatedT: ["Document|Infonode was succefully created",""],
-            nodeSEditedT: ["Document|Infonode was succefully edited",""],
-            leghtLimitLeft: ["Document|Characters left",""],
-            backToTop: ["Document|Back To Top",""]
+            nodeSCreatedT: ["${Phrases:$0 was created}:::${InfoMarket:InfoNode}",""],
+            nodeSEditedT: ["Document|Infonode was succefully edited",""], //
+            leghtLimitLeft: ["System|characters left",""],
+            backToTop: ["Tooltip|scroll to start",""]
         };
         
         CaptionsService.get(captions, function(data){
             var i = 0;
             for(key in captions){
-                captions[key] = data.Entries[i].translation;
+                captions[key] = data.Entries[i].translation.replace(/:\s*$/, ""); //removes last :
                 i++;
             }
             $scope.captions = captions;
@@ -228,7 +228,7 @@
                     modal({
                         type: 'prompt',
                         title: $scope.captions.keywordNameTitle,
-                        text:  $scope.captions.keywordNameText,
+                        text:  $scope.captions.keywordNameText+':',
                         buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel},
                         callback: function(e){
                             if(e){
@@ -255,6 +255,29 @@
                             }
                         }
                     });
+                }
+                
+                $scope.toggleExterURLShow = function(el){
+                    el.stopPropagation(); el.preventDefault();
+                    var b = '._3tFuT-box',
+                        el = el.currentTarget,
+                        parent = $(el).closest('li'),
+                        href = window.location.origin + $(el).attr('href'),
+                        boxInP = parent.find(b),
+                        rem = function(){ $(b).fadeOut(250, function(){$(b).remove()}) },
+                        box = $('<div class="_3tFuT-box"><input type="text" readonly value="" /><a class="_3tFuT-closeBtn"><i class="fa fa-times"></i></a></div>');
+                    
+                    if(boxInP.size() > 0){
+                        rem();
+                        return;
+                    }
+                    
+                    $(b).remove();
+                    box.on('click','._3tFuT-closeBtn', function(){
+                        rem();
+                    });
+                    parent.append(box.fadeIn("fast"));
+                    box.find('input').val(href).focus().select().scrollLeft(0);
                 }
                 
                 $scope.toggleStar = function(el, id){
@@ -382,7 +405,7 @@
             switch(_zhType){
                 case 'new':
                    InfoNodesService.create(data, function(data){
-                        modal({type:'success', title: $scope.captions.success, text: $scope.captions.nodeSCreatedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
+                        modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSCreatedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
                         });
                         $('button:submit').removeAttr('disabled');
                     }); 
@@ -394,7 +417,7 @@
                         if(result && result.Entries){
                             data.keyword = result.Entries[0].id;
                             InfoNodesService.create(data, function(data){
-                                modal({type:'success', title: $scope.captions.success, text: $scope.captions.nodeSCreatedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
+                                modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSCreatedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
                                 });
                                 $('button:submit').removeAttr('disabled');
                             });
@@ -405,7 +428,7 @@
                     delete data.keywordText;
                     delete data.keyword;
                     InfoNodesService.update($scope.infobit.id, data, function(){
-                        modal({type:'success', title: $scope.captions.success, text: $scope.captions.nodeSEditedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
+                        modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSEditedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
                         });
                         $('button:submit').removeAttr('disabled');
                     });
@@ -666,7 +689,7 @@
                         h += '<div class="span6 _5sBr _3cmB"><p class="muted">'+ captions.searchNoResults +'?</p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-circle"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';
 
                     }else{
-                        h += '<div class="span6 _5sBr _3cmB"><p class="text-error">'+ captions.searchFailText +' <b>'+ data +'</b></p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-circle"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';       
+                        h += '<div class="span6 _5sBr _3cmB"><p class="text-error">'+ captions.searchFailText +': <b>'+ data +'</b></p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-circle"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';       
                     }  
                 },
                 $appendText = function(){
