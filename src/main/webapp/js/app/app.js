@@ -257,14 +257,14 @@
                     });
                 }
                 
-                $scope.toggleExterURLShow = function(el){
+                 $scope.toggleExterURLShow = function(el){
                     el.stopPropagation(); el.preventDefault();
                     var b = '._3tFuT-box',
                         el = el.currentTarget,
                         parent = $(el).closest('li'),
                         href = window.location.origin + $(el).attr('href'),
                         boxInP = parent.find(b),
-                        rem = function(){ $(b).fadeOut(250, function(){$(b).remove()}) },
+                        rem = function(){ $(b).fadeOut("fast", function(){$(b).remove()}) },
                         box = $('<div class="_3tFuT-box"><input type="text" readonly value="" /><a class="_3tFuT-closeBtn"><i class="fa fa-times"></i></a></div>');
                     
                     if(boxInP.size() > 0){
@@ -277,7 +277,9 @@
                         rem();
                     });
                     parent.append(box.fadeIn("fast"));
-                    box.find('input').val(href).focus().select().scrollLeft(0);
+                    box.find('input').val(href).focus().select().scrollLeft(0).on('click', function(){
+                        $(this).focus().select().scrollLeft(0);
+                    });
                 }
                 
                 $scope.toggleStar = function(el, id){
