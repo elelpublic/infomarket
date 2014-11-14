@@ -257,7 +257,7 @@
                     });
                 }
                 
-                 $scope.toggleExterURLShow = function(el){
+                $scope.toggleExterURLShow = function(el){
                     el.stopPropagation(); el.preventDefault();
                     var b = '._3tFuT-box',
                         el = el.currentTarget,
