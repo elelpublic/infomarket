@@ -1,4 +1,13 @@
 @font-face {
+   font-family: 'Open Sans';
+    src: url('font-open-sans/OpenSans-Light.eot');
+    src: url('font-open-sans/OpenSans-Light.eot?#iefix') format('embedded-opentype'),
+         url('font-open-sans/OpenSans-Light.woff') format('woff'),
+         url('font-open-sans/OpenSans-Light.ttf') format('truetype'); 
+    font-style: normal;
+    font-weight: 300;
+}
+@font-face {
     font-family: 'Open Sans';
     src: url('font-open-sans/OpenSans-Regular.eot');
     src: url('font-open-sans/OpenSans-Regular.eot?#iefix') format('embedded-opentype'),

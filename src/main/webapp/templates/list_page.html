@@ -32,8 +32,7 @@
                             <li><i class="fa fa-sliders" data-title="{{captions.category}}"></i> {{infobit.category}}</li>
                             <li><i class="fa fa-calendar" data-title="{{captions.date}}"></i> {{infobit.createdTime | date:'dd-MM-yyyy HH:mm'}}</li>
                             <li ng-if="infobit.createdTime < infobit.lastModifiedTime"><i class="fa fa-history"  data-title="{{captions.last_change}}"></i> {{infobit.lastModifiedTime | date:'dd-MM-yyyy HH:mm'}}</li>
-                            <li ng-if="getFiles(infobit.files,'count') > 0"><a href="#" class="_4lBp-attc" data-title="Click to show/hide files"><i class="fa fa-file-text-o"></i> {{getFiles(infobit.files,'count')}} files</a></li>
-                            <li><a href="/projectile/start#!/Frame!api/infomarket#/list/{{keyword.keyword}}&infoNodeId={{infobit.id}}" class="ns-underline" target="_parent"><i class="fa fa-link"></i>  {{captions.getInfobitLink}}</a></li>
+                            <li><a href="{{getLinkURI + keyword.keyword}}&infoNodeId={{infobit.id}}" ng-click="toggleExterURLShow($event);" class="ns-underline" target="_parent"><i class="fa fa-link"></i>  {{captions.getInfobitLink}}</a></li>
                             <li class="rStar actived"><a href="javascript:;" ng-click="toggleStar($event, infobit.id)" data-title="{{captions.star_unstar}}"><i class="fa fa-star"></i> <span>{{infobit.stars}}</span></a></li>
                         </ul>
                     </div>
@@ -48,7 +47,7 @@
         <div class="span4">
             <div class="_5lBc panel panel-type-danger panel-top-bordered">
                 <div class="panel-heading">
-                    {{captions.historyT}}:
+                    {{captions.softLinks}}:
                 </div>
                 <div class="panel-body">
                     <ul>
@@ -61,14 +60,14 @@
             
             <div class="_5lBc panel panel-type-success panel-top-bordered">
                 <div class="panel-heading">
-                    {{captions.sortInfondesT}}:
+                    {{captions.sortInfoNodes}}:
                 </div>
                 <div class="panel-body">
                     <select style="width:100%;" ng-model="listSort" ng-init="listSort='-id'">
-                        <option value="-id">Sort by Date &darr;</option>
-                        <option value="+id">Sort by Date &uarr;</option>
-                        <option value="-stars">Sort by Stars &darr;</option>
-                        <option value="+stars">Sort by Stars &uarr;</option>
+                        <option value="-id">{{captions.sortByDate}} &darr;</option>
+                        <option value="-stars">{{captions.sortByStars}} &darr;</option>
+                        <option value="+id">{{captions.sortByDate}} &uarr;</option>
+                        <option value="+stars">{{captions.sortByStars}} &uarr;</option>
                     </select>
                 </div>
             </div>
@@ -76,3 +75,5 @@
         </div>
     </div>
 </div>
+
+<a href="#" class="scrollUpDownBtn"><i class="fa fa-arrow-circle-up"></i> {{captions.backToTop | ucfirst}}</a>
