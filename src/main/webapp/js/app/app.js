@@ -886,8 +886,8 @@
         /* enable lightbox */
         $('a.lightbox').iLightbox();
 	
-	    /* enable textarea autosize & BBCodes */
-		$('textarea._4aS').autosize().bbCode();
+	/* enable textarea autosize & kAutoComplete & BBCodes */
+	$('textarea._4aS').autosize().kAutoComplete().bbCode();
         
         /* enable characters length counter */
         $('textarea._4aS[maxlength]').on("keyup focus input propertychange", function (e) {
