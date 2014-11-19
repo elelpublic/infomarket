@@ -31,6 +31,7 @@ public class KeyStore {
     if( !loaded ) {
       if( file.exists() && file.isFile() ) {
         key = Files.readFirstLine( file, Charsets.UTF_8 );
+        loaded = true;
       }
     }
     return key;
