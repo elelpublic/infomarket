@@ -73,7 +73,7 @@
             </div>
         </div>
         <hr>
-        <p align="center" style="font-size:12px;color:#777"><b>{{captions.smallStatisticLabel}}</b>: {{getSmallStatistic()}}</p>
+        <p align="center" style="font-size:12px;color:#777"><b>{{captions.smallStatisticLabel}}</b>: {{smallStatistic[0] + ' ' + captions.keywords + ', ' + smallStatistic[1] + ' ' + captions.infoNodes + ', ' + smallStatistic[2] + ' ' + captions.softLinks}}</p>
         <hr>
         
         <div class="statistic" style="display:none;"><ng-include src="'templates/statistic_page.html'"></ng-include></div>
