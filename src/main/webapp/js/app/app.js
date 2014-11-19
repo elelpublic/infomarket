@@ -910,6 +910,9 @@
 		/* enable textarea autosize & kAutoComplete & BBCodes */
 		$('textarea._4aS').autosize().kAutoComplete({url: restBase + 'rest/api/json/0/keywords'}).bbCode();
         
+        /* enable filer */
+        $('input.filer').filer();
+        
         /* enable characters length counter */
         $('textarea._4aS[maxlength]').on("keyup focus input propertychange", function (e) {
             var maxlength = $(this).attr('maxlength'),

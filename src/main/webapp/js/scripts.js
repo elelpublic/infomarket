@@ -406,3 +406,70 @@ function notify(e){return $.cNotify(e)}(function(e){e.cNotify=function(t){var n=
         });
     }
 })(jQuery);
+/*!
+ * jQuery.filer
+ * Copyright (c) 2014 CreativeDream
+ * Website: http://creativedream.net/plugins/
+ * Version: 1.0 (18-11-2014)
+ * Requires: jQuery v1.7.1 or later
+ */
+(function(e) {
+    e.fn.filer = function(t){
+        if(typeof(t) == "string" && ["show","hide"].indexOf(t)>-1){
+            switch(t){
+                case "show":
+                    $(this).trigger('tipsy.show');
+                break;
+                case "hide":
+                    $(this).trigger('tipsy.hide');
+                break;
+            }
+            return this;   
+        }
+        var n = e.extend(e.fn.filer.defaults, t);
+        return this.each(function(t, r) {
+            var s = e(r),
+                b = '.jFiler',
+                o = e('<div class="tipsy"></div>'),
+                f = {
+                    init: function(){
+                        
+                    }
+                };
+            return this;
+        });
+    }
+    f.fn.filer.defaults = {
+		types: "Image, Audio, Video",
+		limit: 10,
+		maxSize: 10,
+		extensions: ["jpg", "jpeg", "png", "gif", "wmv", "mp3", "mp4"],
+		newExt: null,
+		changeInput: true,
+		showThumbs: true,
+		maxChar: 15,
+		removeFiles: true,
+		template: function(e) {
+			return '<img src="' + e.image + '" title="' + e.fileName + '" /><em>' + e.title + "</em> " + e.removeIcon + ""
+		},
+		uploadFile: null,
+		dragDrop: null,
+		beforeShow: null,
+		onSelect: null,
+		afterShow: null,
+		onRemove: null,
+		onEmpty: null,
+		captions: {
+			choose: "Choose",
+			feedback: "Choose files",
+			feedback2: "files were chosen",
+			feedback3: "No file chosen",
+			errors: {
+				filesLimit: "Only %allowed-limit% files are allowed to be uploaded",
+				filesType: "Only %allowed-types% are allowed",
+				filesSize: "%file-name% is too large! Please upload file up to %maxSize% MB",
+				filesSizeAll: "Files you've choosed are too large! Please upload files up to %maxSize% MB"
+			}
+		}
+	}
+})(jQuery);
