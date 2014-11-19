@@ -2,4 +2,3 @@ infomarket
 ==========
 
 Wikilike intranet.
-a
