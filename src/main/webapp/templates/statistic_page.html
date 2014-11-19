@@ -5,18 +5,14 @@
         <h4>{{captions.users}}</h4>
         <table class="table table-bordered ns-hva table-custom-1">
             <tbody>
-                <tr>
-                    <td width="80%"><a>Admin</a></td>
-                    <td width="10%"><span>10</span></td>
+                <tr ng-repeat="sUser in sUsers.Entries | limitTo: 20">
+                    <td width="80%"><a>{{sUser.author}}</a></td>
+                    <td width="10%"><span>{{sUser.count}}</span></td>
                 </tr>
-                <tr>
-                    <td width="80%"><a>User</a></td>
-                    <td width="10%"><span>422</span></td>
-                </tr>	
-                <tr>
-                    <td width="80%"><a>Andrew</a></td>
-                    <td width="10%"><span>6</span></td>
-                </tr>							
+                <tr ng-if="sUsers.Entries.length > 20">
+                    <td class="ns-khva"><a>...</a></td>
+                    <td></td>
+                </tr>
             </tbody>						
         </table>
     </div>
@@ -29,10 +25,14 @@
         <h4>{{captions.categories}}</h4>
         <table class="table table-bordered ns-hva table-custom-1">
             <tbody>
-                <tr ng-repeat="sCategory in sCategories">
-                    <td width="80%"><a>{{sCategory.name}}</a></td>
+                <tr ng-repeat="sCategory in sCategories.Entries | limitTo: 20">
+                    <td width="80%"><a>{{sCategory.category}}</a></td>
                     <td width="10%"><span>{{sCategory.count}}</span></td>
-                </tr>						
+                </tr>
+                <tr ng-if="sCategories.Entries.length > 20">
+                    <td class="ns-khva"><a>...</a></td>
+                    <td></td>
+                </tr>
             </tbody>						
         </table>
     </div>

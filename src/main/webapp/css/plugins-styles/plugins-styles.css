@@ -816,53 +816,79 @@
  * Copyright (c) 2013 CreativeDream
  * Version: 1.0 (30-07-2013)
 */
-#tipsy{
+.tipsy{
 	position:absolute;
 	top:0;
 	left:0;
-	padding: 7px 10px;
-	font-size: 10px;
-	line-height: 12px;
-    z-index: 100000;
-	background-color: rgba(0,0,0,0.77);
-	font-family:sans-serif;
-	color: white; 
-	text-align: center;
-	border-radius: 2px;
-	display:none;
+	padding: 6px 8px;
+    font-family:sans-serif;
+	font-size: 12px;
+    line-height: normal;
+    color: white;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+	background-color: rgba(0,0,0,0.75);
+    z-index: 9999;
 }
-#tipsy:before{
+.tipsy:before{
 	position: absolute;
-	bottom:-5px;
-	left: 6%;
+	bottom: -5px;
+	left: 5px;
 	display: inline-block;
+    content: '';
 	border-right: 5px solid transparent;
-	border-top: 5px solid rgba(0,0,0,0.77);
+	border-top: 5px solid rgba(0,0,0,0.75);
+    border-bottom: 0 solid rgba(0,0,0,0.75);
 	border-left: 5px solid transparent;
-	content: '';
 }
-#tipsy.arrow-top:before{
-	position: absolute;
-	bottom:auto;
-	top:-5px;
-	left: 6%;
-	display: inline-block;
-	border-right: 5px solid transparent;
-	border-top:none;
-	border-bottom: 5px solid rgba(0,0,0,0.77);
-	border-left: 5px solid transparent;
-	content: '';
+.tipsy.arrow-top:before{
+    bottom: auto;
+    top: -5px;
+    border-top-width: 0;
+    border-bottom-width: 5px;
 }
-#tipsy.arrow-left:before{
-	left: 6%;
+.tipsy.arrow-bottom:before{
+    bottom: -5px;
+    top: auto;
+    border-top-width: 5px;
+    border-bottom-width: 0;
 }
-#tipsy.arrow-center:before{
-	left: 50%;
-	margin-left:-5px;
+.tipsy.arrow-left:before{
+    left: 5px;
+    right: auto;
 }
-#tipsy.arrow-right:before{
-	left:auto;
-	right:3px;
+.tipsy.arrow-center:before{
+    left: 50%;
+    right: auto;
+    margin-left: -5px;
+}
+.tipsy.arrow-right:before{
+    right: 5px;
+    left: auto;
+}
+.tipsy.arrow-side-left:before{
+    top: 50%;
+    bottom: auto;
+    left: 0;
+    right: auto;
+    margin-top: -5px;
+    margin-left: -5px;
+    border-right-color: rgba(0,0,0,0.75);
+	border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+	border-left: 0;
+}
+.tipsy.arrow-side-right:before{
+    top: 50%;
+    bottom: auto;
+    right: 0;
+    left: auto;
+    margin-top: -5px;
+    margin-right: -5px;
+    border-left-color: rgba(0,0,0,0.75);
+	border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+	border-right: 0;
 }
 
 /*
@@ -1305,7 +1331,6 @@ background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/
 .notify-overlay.light{
     background: rgba(255,255,255,0.3);
 }
-}
 
 /*
     =========================================
@@ -1314,7 +1339,7 @@ background:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/
 
     =========================================
 */
-.kACompleteBox{
+.kACompleteBox {
 	position:absolute;
 	top:0;
 	left:0;
