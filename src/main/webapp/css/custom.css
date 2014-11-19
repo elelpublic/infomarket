@@ -93,6 +93,10 @@ input[type=radio][disabled]:checked+label {
     cursor: default;
 }
 
+input{
+    word-break: normal;
+}
+
 textarea {
     overflow: auto;
     vertical-align: top;
