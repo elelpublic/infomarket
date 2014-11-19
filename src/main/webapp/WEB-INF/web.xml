@@ -9,7 +9,7 @@
     <description>
         Wikilike intranet.
     </description>
-
+    
     <servlet>
         <servlet-name>ConfigServlet</servlet-name>
         <servlet-class>com.infodesire.infomarket.ConfigServlet</servlet-class>
@@ -20,14 +20,35 @@
         <url-pattern>/config</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/*</url-pattern>
-    </servlet-mapping>
+		<filter>
+		   <filter-name>ApplicationKeyFilter</filter-name>
+		   <filter-class>com.infodesire.infomarket.ApplicationKeyFilter</filter-class>
+		   <init-param>
+			  <param-name>test-param</param-name>
+			  <param-value>Initialization Paramter</param-value>
+		   </init-param>
+		</filter>
+		<filter-mapping>
+		   <filter-name>ApplicationKeyFilter</filter-name>
+		   <url-pattern>/rest/*</url-pattern>
+		</filter-mapping>
 
-    <servlet-mapping>
-        <servlet-name>default</servlet-name>
-        <url-pattern>/favicon.ico</url-pattern>
-    </servlet-mapping>
+		<servlet>
+		    <servlet-name>proxy</servlet-name>
+		    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+		    <init-param>
+		      <param-name>targetUri</param-name>
+		      <param-value>http://localhost:8080/projectile/rest</param-value>
+		    </init-param>
+		    <init-param>
+		      <param-name>log</param-name>
+		      <param-value>true</param-value>
+		    </init-param>
+		</servlet>
+		<servlet-mapping>
+		  <servlet-name>proxy</servlet-name>
+		  <url-pattern>/rest/*</url-pattern>
+		</servlet-mapping>
+		
 
 </web-app> 
