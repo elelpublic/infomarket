@@ -9,7 +9,7 @@
     */
     var app = angular.module('infomarket', ['ngRoute', 'ngSanitize']);
     var Root = '/infomarket/',
-        restBase = '/projectile/',
+        restBase = '/infomarket/',
         getLinkURI = restBase + 'start#!/app/infomarket#/list/';
 
     /*
@@ -110,11 +110,12 @@
             searchFailText: ["InfoMarket|No results found for",""],
             success: ["Document|Success",""],
             nodeSCreatedT: ["${Phrases:$0 was created}:::${InfoMarket:InfoNode}",""],
-            nodeSEditedT: ["Document|Infonode was succefully edited",""], //
+            nodeSEditedT: ["${Phrases:$0 was saved}:::${InfoMarket:InfoNode}",""],
             leghtLimitLeft: ["System|characters left",""],
             backToTop: ["Tooltip|scroll to start",""]
         };
         
+        $scope.captions = {};
         CaptionsService.get(captions, function(data){
             var i = 0;
             for(key in captions){
@@ -131,16 +132,18 @@
         @FirstPage Controller
         (is declared on First Page)
     */
-    app.controller('FirstPageController', function($scope, $http, $routeParams, CategoriesService, KeywordsService, InfoNodesService, OthersService){
+    app.controller('FirstPageController', function($scope, $http, $routeParams, CategoriesService, KeywordsService, InfoNodesService, StatisticService, OthersService){
         CategoriesService.list(function(data){
             $scope.categories = data.Entries;
-            $scope.sCategories = [];
         });
+        
         KeywordsService.list(function(data){
             $scope.keywords = data;
         });
+        
         InfoNodesService.get(null, function(data){
             var lastKeywords = [];
+            if(!data.Entries){ return false }
             data.Entries.reverse();
             var filter = data.Entries.filter( function(r){
                 if(lastKeywords.indexOf(r.keyword) == -1){
@@ -153,14 +156,9 @@
             $scope.lastNews = filter;
         },{category:'News'});
         
-        $scope.getSmallStatistic = function(){
-            if(typeof($scope.keywords)=='undefined' || typeof($scope.keywords.TotalEntryCount)=='undefined'){return '0';}
-            var num1 = $scope.keywords.TotalEntryCount,
-                num2 = 0,
-                num3 = 0;
-            
-            return num1 + ' ' + $scope.captions.keywords + ', ' + num2 + ' ' + $scope.captions.infoNodes + ', ' + num3 + ' ' + $scope.captions.softLinks;       
-        };
+        StatisticService.get('general',function(data){
+            $scope.smallStatistic = [data.Entries[0].keywords, data.Entries[0].infonodes, data.Entries[0].softlinks];
+        });
         
         $scope.randomEntry = function(){
             var randomKey = $scope.keywords.Entries[Math.floor(Math.random() * $scope.keywords.Entries.length)];
@@ -175,16 +173,16 @@
         };
         
         $scope.toggleStatistic = function(){
-            if($scope.sCategories.length == 0){
-                for(category in $scope.categories){
-                    InfoNodesService.get(null, function(data, param){
-                        var category = $scope.categories.filter(function(o, index){
-                            if(o.id == param.category){ return true; }
-                        }), _o = {id: category[0].id, name: category[0].name, count: 0};
-                        _o.count = (data && typeof(data.TotalEntryCount) != 'undefined' ? data.TotalEntryCount : 0);
-                        $scope.sCategories.push(_o);
-                    }, {category: $scope.categories[category].id});
-                }
+            if(!$scope.sUsers){
+                StatisticService.get('users',function(data){
+                    $scope.sUsers = data;
+                });
+            }
+            
+            if(!$scope.sCategories){
+                StatisticService.get('categories',function(data){
+                    $scope.sCategories = data;
+                });
             }
             
             if(!$('.statistic').is(':visible')){
@@ -192,7 +190,7 @@
                 $("body").animate({scrollTop: $('.statistic').offset().top - $(window).scrollTop() + 5},"slow");
             }else{
                $('.statistic').slideUp(250);    
-            }   
+            }
         };
         
         loadJqueryFn();
@@ -449,7 +447,7 @@
     //Categories Service
     app.service('CategoriesService', function($http, AjaxService){
         this.list = function(callback){
-           AjaxService.send('get', restBase + 'rest/api/json/0/keywordcategories').success(function(r){
+           AjaxService.send('get', 'rest/api/json/0/keywordcategories').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -459,7 +457,7 @@
         }
         
         this.find = function(pattern, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/keywordcategories').success(function(r) {
+            AjaxService.send('get', 'rest/api/json/0/keywordcategories').success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     var matches = r.Entries.filter(function(entry){
                         return (!isNaN(pattern) ? entry.id : entry.name) == pattern;
@@ -472,7 +470,7 @@
         }
         
         this.get = function(id, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/keywordcategories/' + id).success(function(r) {
+            AjaxService.send('get', 'rest/api/json/0/keywordcategories/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -485,7 +483,7 @@
     //Keywords Service
     app.service('KeywordsService', function($http, AjaxService){
         this.list = function(callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/keywords').success(function(r){
+            AjaxService.send('get', 'rest/api/json/0/keywords').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -495,7 +493,7 @@
         }
         
         this.find = function(d, searchTarget, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + d).success(function(r) {
+            AjaxService.send('get', 'rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + d).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -505,7 +503,7 @@
         }
         
         this.get = function(id, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/keywords/' + id).success(function(r) {
+            AjaxService.send('get', 'rest/api/json/0/keywords/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -515,7 +513,7 @@
         }
         
         this.update = function(id, data, callback){
-            AjaxService.send('put',  restBase + 'rest/api/json/0/keywords/' + id, data).success(function(r){
+            AjaxService.send('put',  'rest/api/json/0/keywords/' + id, data).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -525,7 +523,7 @@
         }
         
         this.visit = function(id, callback){
-            AjaxService.send('post', restBase + 'rest/api/json/0/visits', {keyword: id}).success(function(r){
+            AjaxService.send('post', 'rest/api/json/0/visits', {keyword: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -539,7 +537,7 @@
     //InfoNodes Service
     app.service('InfoNodesService', function($http, AjaxService){
         this.list = function(id, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/infonodes?keyword='+ id).success(function(r){
+            AjaxService.send('get', 'rest/api/json/0/infonodes?keyword='+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -549,7 +547,7 @@
         }
         
         this.get = function(id, callback, data){
-            var _uri = restBase + 'rest/api/json/0/infonodes';
+            var _uri = 'rest/api/json/0/infonodes';
             if(data && Object.keys(data).length > 0){
                 var i = 0;
                 for(e in data){
@@ -571,7 +569,7 @@
         }
         
         this.create = function(data, callback){
-            AjaxService.send('post', restBase + 'rest/api/json/0/infonodes', data).success(function(r){
+            AjaxService.send('post', 'rest/api/json/0/infonodes', data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -582,7 +580,7 @@
         }
         
         this.update = function(id, data, callback){
-            AjaxService.send('put',  restBase + 'rest/api/json/0/infonodes/' + id, data).success(function(r){
+            AjaxService.send('put',  'rest/api/json/0/infonodes/' + id, data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;}
                 }else{
@@ -594,7 +592,7 @@
         
         this.star = function(id, callback){
             //star / unstar action
-            AjaxService.send('post', restBase + 'rest/api/json/0/stars', {infoNode: id}).success(function(r){
+            AjaxService.send('post', 'rest/api/json/0/stars', {infoNode: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback({status:'starred'});}else{return true;};
                 }else{
@@ -604,7 +602,7 @@
         }
         
         this.delete = function(id, callback){
-            AjaxService.send('delete', restBase + 'rest/api/json/0/infonodes/' + id).success(function(r){
+            AjaxService.send('delete', 'rest/api/json/0/infonodes/' + id).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -618,7 +616,7 @@
     //SoftLinks Service
     app.service('SoftLinksService', function($http, AjaxService){
         this.list = function(id, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/softlinks?keyword=' + id).success(function(r){
+            AjaxService.send('get', 'rest/api/json/0/softlinks?keyword=' + id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -628,7 +626,7 @@
         }
         
         this.get = function(id, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/softlinks/'+ id).success(function(r){
+            AjaxService.send('get', 'rest/api/json/0/softlinks/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -641,7 +639,7 @@
     //Users Service
     app.service('UsersService', function($http, AjaxService){
         this.get = function(id, callback){
-            AjaxService.send('get', restBase + 'rest/api/json/0/employees/'+ id).success(function(r){
+            AjaxService.send('get', 'rest/api/json/0/employees/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -649,6 +647,46 @@
                 }
             })
         };
+    });
+    
+    //Captions Service
+    app.service('CaptionsService', function($http, AjaxService){
+        this.get = function(captions, callback){
+            var data = "",
+                first = true;
+            for(key in captions){
+                var value = captions[key],
+                    param = (first ? '?' : '&');
+                data += param + 'id=' + value[0];
+                first = false;
+            }
+            AjaxService.send('get', 'rest/api/json/0/captions' + data).success(function(data){
+                callback(data);
+            });  
+        }
+    });
+    
+    //Statistic Service
+    app.service('StatisticService', function($http, AjaxService){
+        this.get = function(type, callback){
+            switch(type){
+                case 'general':
+                    AjaxService.send('get', 'rest/api/json/0/infomarketstatisticss/10').success(function(data){
+                        callback(data);
+                    });
+                break;
+                case 'categories':
+                    AjaxService.send('get', 'rest/api/json/0/topentries?topList=CATEGORY').success(function(data){
+                        callback(data);
+                    });
+                break;
+                case 'users':
+                    AjaxService.send('get', 'rest/api/json/0/topentries?topList=AUTHOR').success(function(data){
+                        callback(data);
+                    });
+                break;
+            }
+        }
     });
     
     //Others Service
@@ -719,30 +757,13 @@
         }
     });
     
-    //Captions Service
-    app.service('CaptionsService', function($http, AjaxService){
-        this.get = function(captions, callback){
-            var data = "",
-                first = true;
-            for(key in captions){
-                var value = captions[key],
-                    param = (first ? '?' : '&');
-                data += param + 'id=' + value[0];
-                first = false;
-            }
-            AjaxService.send('get', restBase + 'rest/api/json/0/captions' + data).success(function(data){
-                callback(data);
-            });  
-        }
-    });
-    
     //Ajax Service
     app.service('AjaxService', function($http){
         this.send = function(_method, _uri, _data){
             return $http[_method](
-                _uri ? _uri : null,
+                _uri ? restBase + _uri : null,
                 _data ? _data : { params: {apiKeyCode: 0} },
-                { params: {apiKeyCode: 0} }
+                { params: null }
             ).error(function(a,b){
                 if(b == 401){
                     window.location = Root + '404.html?statusCode=' + b;
@@ -872,7 +893,7 @@
             return true;
         }
         if(k == 'repeat'){
-            $('*[data-title]').tipsy({arrow:'center'});
+            $('*[data-title]').tipsy();
             $('a.lightbox').iLightbox();
             
             scrollToInfoNode();
@@ -881,13 +902,13 @@
         }
         
         /* enable tipsy */
-        $('*[data-title]').tipsy({arrow:'center'});
+        $('*[data-title]').tipsy();
         
         /* enable lightbox */
         $('a.lightbox').iLightbox();
 	
-	/* enable textarea autosize & kAutoComplete & BBCodes */
-	$('textarea._4aS').autosize().kAutoComplete().bbCode();
+		/* enable textarea autosize & kAutoComplete & BBCodes */
+		$('textarea._4aS').autosize().kAutoComplete({url: restBase + 'rest/api/json/0/keywords'}).bbCode();
         
         /* enable characters length counter */
         $('textarea._4aS[maxlength]').on("keyup focus input propertychange", function (e) {
