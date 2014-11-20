@@ -17,7 +17,10 @@
                 <textarea name="text" ng-model="post_text" class="input-block-level _4aS" rows="5" maxlength="2500" required style="margin-bottom: 5px;"></textarea>
                 <span class="help-block" style="display: none;">{{captions.leghtLimitLeft | ucfirst}}: <i>2500</i></span>
                 <br>
-                <button type="submit" class="btn btn-success">{{captions.submit}}</button>
+                <div class="row">
+                    <a href="javascript:history.back()" class="pull-left ns-underline" style="font-size:12px; color:#888; margin-top:5px;"><i class="fa fa-arrow-circle-left"></i> {{captions.cancel}}</a>
+                    <button type="submit" class="btn btn-success btn-with-icon-r pull-right">{{captions.submit}}</button>
+                </div>
             </form>	
 
         </div>
@@ -28,7 +31,7 @@
                     <h4><i class="fa fa-desktop"></i> {{captions.livePreview}}:</h4>
                     <hr>
 
-                    <p style="white-space: pre-wrap;" ng-bind-html="post_text | bbcode"></p>
+                    <p style="white-space: pre-wrap;" ng-bind-html="post_text"></p>
 
                     <div class="_5lBp-attaches">
                         <ul></ul>							

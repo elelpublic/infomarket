@@ -9,10 +9,6 @@
                     <td width="80%"><a>{{sUser.author}}</a></td>
                     <td width="10%"><span>{{sUser.count}}</span></td>
                 </tr>
-                <tr ng-if="sUsers.Entries.length > 20">
-                    <td class="ns-khva"><a>...</a></td>
-                    <td></td>
-                </tr>
             </tbody>						
         </table>
     </div>
@@ -28,10 +24,6 @@
                 <tr ng-repeat="sCategory in sCategories.Entries | limitTo: 20">
                     <td width="80%"><a>{{sCategory.category}}</a></td>
                     <td width="10%"><span>{{sCategory.count}}</span></td>
-                </tr>
-                <tr ng-if="sCategories.Entries.length > 20">
-                    <td class="ns-khva"><a>...</a></td>
-                    <td></td>
                 </tr>
             </tbody>						
         </table>
