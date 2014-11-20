@@ -32,10 +32,6 @@
                             <td width="80%"><a href="#/list/{{keyword.keyword}}">{{keyword.keyword}}</a></td>
                             <td width="10%"><span>{{keyword.stars}}</span></td>
                         </tr>
-                        <tr ng-if="keywords.Entries.length > 20">
-                            <td class="ns-khva"><a>...</a></td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -48,10 +44,6 @@
                             <td><a href="#/list/{{keyword.keyword}}">{{keyword.keyword}}</a></td>
                             <td width="22%"><span>{{keyword.timeCreated | date:'dd.MM.yyyy'}}</span></td>
                         </tr>
-                        <tr ng-if="keywords.Entries.length > 20">
-                            <td class="ns-khva"><a>...</a></td>
-                            <td></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -63,10 +55,6 @@
                         <tr ng-repeat="news in lastNews | orderBy: '-id' | limitTo: 20">
                             <td><a href="#/list/{{news.keyword}}&infoNodeId={{news.id}}">{{news.keyword}}</a></td>
                             <td width="22%" style="min-width: 115px;"><span>{{news.lastModifiedTime | date:'HH:mm:ss dd.MM.yyyy'}}</span></td>
-                        </tr>
-                        <tr ng-if="lastNews.length > 20">
-                            <td class="ns-khva"><a>...</a></td>
-                            <td></td>
                         </tr>
                     </tbody>
                 </table>

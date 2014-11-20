@@ -10,7 +10,7 @@
     var app = angular.module('infomarket', ['ngRoute', 'ngSanitize']);
     var Root = '/infomarket/',
         restBase = '/infomarket/',
-        getLinkURI = restBase + 'start#!/app/infomarket#/list/';
+        getLinkURI = Root + 'start#!/app/infomarket#/list/';
 
     /*
         Application Config
@@ -212,6 +212,13 @@
                 
                 InfoNodesService.list($scope.keyword.id, function(data){
                     $scope.infobits = data.Entries;
+                    /* html render */
+                    for(key in $scope.infobits){
+                        var val = $scope.infobits[key];
+                        InfoNodesService.htmlRead(val.id, {key: key}, function(data, params){
+                            $scope.infobits[params.key].content = data;
+                        });   
+                    }
                 });
                 
                 KeywordsService.visit($scope.keyword.id);
@@ -611,6 +618,12 @@
                 }   
             })   
         }
+        
+        this.htmlRead = function(id, params, callback){
+            AjaxService.send('get', 'rest/api/html/0/infonodes/' + id).success(function(r){
+                if(callback){callback(r, params);}else{return true;}
+            })  
+        }
     });
     
     //SoftLinks Service
@@ -762,7 +775,7 @@
         this.send = function(_method, _uri, _data){
             return $http[_method](
                 _uri ? restBase + _uri : null,
-                _data ? _data : { params: {apiKeyCode: 0} },
+                _data ? _data : { params: null },
                 { params: null }
             ).error(function(a,b){
                 if(b == 401){
@@ -801,32 +814,6 @@
         return function(string) {
             return (string ? string.charAt(0).toUpperCase() + string.slice(1) : '');
         }
-    }).filter('bbcode', function () {
-        return function(text) {
-            text = htmlentities(text);
-            return text
-                .replace(/\[br\]/g, "<br>")
-                .replace(/\[h4\](.*?)\[\/h4\]/g, "<h4>$1</h4>")
-                .replace(/\[b\](.*?)\[\/b\]/g, "<b>$1</b>")
-                .replace(/\[i\](.*?)\[\/i\]/g, "<em>$1</em>")
-                .replace(/\[u\](.*?)\[\/u\]/g, "<u>$1</u>")
-                .replace(/\[s\](.*?)\[\/s\]/g, "<s>$1</s>")
-                .replace(/\[font=(.*?)\]([\s\S]*?)\[\/font\]/g, "<font face=\"$1\">$2</font>")
-                .replace(/\[size=(.*?)\]([\s\S]*?)\[\/size\]/g, "<font size=\"$1\">$2</font>")
-                .replace(/\[color=(.*?)\]([\s\S]*?)\[\/color\]/g, "<font color=\"$1\">$2</font>")
-                .replace(/\[img\](.*?)\[\/img\]/g, "<a href=\"$1\" class=\"lightbox\" data-lightbox-gallery=\"{{'gallery'}}\" target=\"_blank\"><img src=\"$1\" /></a>")
-                .replace(/\[code\]([\s\S]*?)\[\/code\]/g, "<kbd>$1</kbd>")
-                .replace(/\[blockquote=(.*?)\]([\s\S]*?)\[\/blockquote\]/g, "<blockquote><p>$2</p><small>$1</small></blockquote>")
-                .replace(/\[blockquote\]([\s\S]*?)\[\/blockquote\]/g, "<blockquote><p>$1</p></blockquote>")
-                .replace(/\[p=(.*?)\]([\s\S]*?)\[\/p\]/g, "<p class=\"$1\">$2</p>")
-                .replace(/\[url=(.*?)\](.*?)\[\/url\]/g, "<a href=\"$1\" target=\"_blank\">$2</a>")
-                .replace(/\[web\|(.*?)\]/g, "<a href=\"$1\" target=\"_blank\">$1</a>")
-                .replace(/\[doc\|(.*?)\]/g, "<a href=\"/projectile/start#!/$1\" target=\"_parent\">Link to a Document</a>")
-                .replace(/\[center\]([\s\S]*?)\[\/center\]/g, "<center>$1</center>")
-                .replace(/\[right\]([\s\S]*?)\[\/right\]/g, "<div class=\"text-right\" style=\"display:inline;\">$1</div>")
-                .replace(/\[hr\]/g, "<hr>")
-                .replace(/\[(.*?)\]/g, "<a href=\"#/list/$1\" style=\"text-decoration:underline\">$1</a>");
-            }
     });
     
     /*
@@ -907,8 +894,8 @@
         /* enable lightbox */
         $('a.lightbox').iLightbox();
 	
-	/* enable textarea autosize & kAutoComplete & BBCodes */
-	$('textarea._4aS').autosize().kAutoComplete({url: restBase + 'rest/api/json/0/keywords'}).bbCode();
+	    /* enable textarea autosize & kAutoComplete & BBCodes */
+	    $('textarea._4aS').autosize().kAutoComplete({url: restBase + 'rest/api/json/0/keywords'}).bbCode();
         
         /* enable characters length counter */
         $('textarea._4aS[maxlength]').on("keyup focus input propertychange", function (e) {

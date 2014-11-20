@@ -894,3 +894,17 @@ blockquote {
 ._3tFuT-box a._3tFuT-closeBtn:hover {
     color: #fff;
 }
+
+span[class^="infomarket-tag"][class*="infomarket-tagStatus-denied"]{
+    color: #b94a48;
+    text-decoration: line-through;
+}
+span[class^="infomarket-tag"][class*="infomarket-tagStatus-notFound"]{
+    color: #999999;
+    cursor: default;
+}
+
+span[class^="infomarket-tag"][class*="infomarket-tagStatus-broken"]{
+    color: #b94a48;
+    font-style: italic;
+}
