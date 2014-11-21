@@ -11,7 +11,7 @@ apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'application'
 apply plugin: 'eclipse'
-//apply plugin: 'ivy-publish'
+apply plugin: 'ivy-publish'
 apply plugin: 'jetty'
 
 
@@ -113,9 +113,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+    archives war
 }
 
-/*
 publishing {
 	publications {
 		ivyJava( IvyPublication ) {
@@ -124,6 +124,9 @@ publishing {
                 type "source"
                 conf "runtime"
             }
+		}
+		ivyWeb( IvyPublication ) {
+			from components.web
 		}
 	}
 	repositories {
@@ -136,7 +139,6 @@ publishing {
 	    }
 	}
 }
-*/
 
 jettyRun.webAppSourceDirectory = file("src/main/webapp")
 
