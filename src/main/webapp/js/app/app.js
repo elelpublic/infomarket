@@ -10,7 +10,7 @@
     var app = angular.module('infomarket', ['ngRoute', 'ngSanitize']);
     var Root = '/infomarket/',
         restBase = '/infomarket/',
-        getLinkURI = Root + 'start#!/app/infomarket#/list/';
+        getLinkURI = '/projectile/start#!/app/infomarket';
 
     /*
         Application Config
