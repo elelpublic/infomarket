@@ -41,8 +41,8 @@
                         <ul class="row">
                             <li><i class="fa fa-user"></i></li>
                             <li><i class="fa fa-sliders"></i> {{ post_category }}</li>
-                            <li><i class="fa fa-calendar"></i> {{ date | date:'dd-MM-yyyy HH:mm' }}</li>
-                            <li ng-if="last_change && infobit.date != last_change"><i class="fa fa-history"></i> {{ last_change | date:'dd-MM-yyyy HH:mm' }}</li>
+                            <li><i class="fa fa-calendar"></i> {{ date | date:'HH:mm dd-MM-yyyy' }}</li>
+                            <li ng-if="last_change && infobit.date != last_change"><i class="fa fa-history"></i> {{ last_change | date:'HH:mm dd-MM-yyyy' }}</li>
                         </ul>
                     </div>						
                 </li>

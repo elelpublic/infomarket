@@ -10,7 +10,7 @@
     var app = angular.module('infomarket', ['ngRoute', 'ngSanitize']);
     var Root = '/infomarket/',
         restBase = '/infomarket/',
-        getLinkURI = Root + 'start#!/app/infomarket#/list/';
+        getLinkURI = '/projectile/start#!/app/infomarket';
 
     /*
         Application Config
@@ -500,7 +500,7 @@
         }
         
         this.find = function(d, searchTarget, callback){
-            AjaxService.send('get', 'rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + d).success(function(r) {
+            AjaxService.send('get', 'rest/api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + encodeURIComponent(d)).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
