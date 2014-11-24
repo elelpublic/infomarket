@@ -32,7 +32,7 @@
                             <li><i class="fa fa-sliders" data-title="{{captions.category}}"></i> {{infobit.category}}</li>
                             <li><i class="fa fa-calendar" data-title="{{captions.date}}"></i> {{infobit.createdTime | date:'HH:mm dd-MM-yyyy'}}</li>
                             <li ng-if="infobit.createdTime < infobit.lastModifiedTime"><i class="fa fa-history"  data-title="{{captions.last_change}}"></i> {{infobit.lastModifiedTime | date:'HH:mm dd-MM-yyyy'}}</li>
-                            <li><a href="{{getLinkURI + '#/list/' + keyword.keyword}}&infoNodeId={{infobit.id}}" ng-click="toggleExterURLShow($event);" class="ns-underline" target="_parent"><i class="fa fa-link"></i>  {{captions.getInfobitLink}}</a></li>
+                            <li><a href="{{getLinkURI + '#/list/' + keyword.keyword}}&infonodeId={{infobit.id}}" ng-click="toggleExterURLShow($event);" class="ns-underline" target="_parent"><i class="fa fa-link"></i>  {{captions.getInfobitLink}}</a></li>
                             <li class="rStar actived"><a href="javascript:;" ng-click="toggleStar($event, infobit.id)" data-title="{{captions.star_unstar}}"><i class="fa fa-star"></i> <span>{{infobit.stars}}</span></a></li>
                         </ul>
                     </div>
