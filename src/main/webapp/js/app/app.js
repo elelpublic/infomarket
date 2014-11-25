@@ -863,8 +863,8 @@
     
     function scrollToInfoNode(){
         var $hash_link = location.hash;
-        if($hash_link.search(/\#\/list\//) > -1 && getParameterByName('infoNodeId', true)){
-            var $param = getParameterByName('infoNodeId', true),
+        if($hash_link.search(/\#\/list\//) > -1 && getParameterByName('infonodeId', true)){
+            var $param = getParameterByName('infonodeId', true),
                 $item = $('._5lBp > li[data-item-id^="'+$param+'"]');
             if($item.size() > 0){
                 $item.css('opacity','1').css('background-color','#FFF8D0');
