@@ -35,10 +35,10 @@
 
 		<servlet>
 		    <servlet-name>proxy</servlet-name>
-		    <servlet-class>org.mitre.dsmiley.httpproxy.ProxyServlet</servlet-class>
+		    <servlet-class>com.infodesire.infomarket.ProxyServlet</servlet-class>
 		    <init-param>
 		      <param-name>targetUri</param-name>
-		      <param-value>http://localhost:8080/projectile/rest</param-value>
+		      <param-value>https://localhost/projectile/rest</param-value>
 		    </init-param>
 		    <init-param>
 		      <param-name>log</param-name>
