@@ -773,8 +773,15 @@
     //Ajax Service
     app.service('AjaxService', function($http){
         this.send = function(_method, _uri, _data){
+//          if( _uri ) {
+//            var sep = '&';
+//            if( _uri.indexOf( '?' ) == -1 ) {
+//              sep = '?';
+//            }
+//            _uri = _uri + sep + 'bsmts=' + new Date().getTime();
+//          }
             return $http[_method](
-                _uri ? restBase + _uri : null,
+                _uri ? restBase + _uri: null,
                 _data ? _data : { params: null },
                 { params: null }
             ).error(function(a,b){
