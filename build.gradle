@@ -77,6 +77,8 @@ war {
 	from( '.' ) {
 		include 'bower_components/**'
 		exclude 'bower_components/jquery/src/**'
+		exclude 'bower_components/jquery/test/**'
+		exclude 'bower_components/bootstrap/docs/**'
 	}
 }
 
