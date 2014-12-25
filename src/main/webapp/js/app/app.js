@@ -109,6 +109,7 @@
             searchNoResults: ["InfoMarket|Did not find what you were looking for",""],
             searchFailText: ["InfoMarket|No results found for",""],
             success: ["Document|Success",""],
+            error: ["System|Error",""],
             nodeSCreatedT: ["${Phrases:$0 was created}:::${InfoMarket:InfoNode}",""],
             nodeSEditedT: ["${Phrases:$0 was saved}:::${InfoMarket:InfoNode}",""],
             leghtLimitLeft: ["System|characters left",""],
@@ -253,9 +254,15 @@
                     el = $(el)[0];
                     modal({title: $scope.captions.confirmation, type: 'confirm', text: $scope.captions.removeConfirmationText, buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel} ,callback: function(e){
                             if(e){
-                                InfoNodesService.delete(id);
-                                $(el.currentTarget).closest('.item').slideUp(250, function(){
-                                    $(this).remove();
+                                InfoNodesService.delete(id, function( r ) {
+                                    if( r.StatusCode && r.StatusCode.CodeNumber == 0 ) {
+                                        $(el.currentTarget).closest('.item').slideUp(250, function(){
+                                            $(this).remove();
+                                        });
+                                    }
+                                    else {
+                                        modal({title: $scope.captions.error, type:'error', text: r.Message});
+                                    }
                                 });
                             }
                         }
@@ -434,9 +441,13 @@
                 case 'edit':
                     delete data.keywordText;
                     delete data.keyword;
-                    InfoNodesService.update($scope.infobit.id, data, function(){
-                        modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSEditedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
-                        });
+                    InfoNodesService.update($scope.infobit.id, data, function( r ){
+                        if( r.StatusCode && r.StatusCode.CodeNumber == 0 ) {
+                            modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSEditedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}});
+                        }
+                        else {
+                            modal({title: $scope.captions.error, type:'error', text: r.Message});
+                        }
                         $('button:submit').removeAttr('disabled');
                     });
                 break;
@@ -592,7 +603,7 @@
                     if(callback){callback(r);}else{return true;}
                 }else{
                     console.log(r);
-                    if(callback){callback(false);}else{return false;}
+                    if(callback){callback(r);}else{return r;}
                 }
             })
         }
@@ -614,7 +625,7 @@
                     if(callback){callback(r);}else{return true;};
                 }else{
                     console.log(r);
-                    if(callback){callback(false);}else{return false;};
+                    if(callback){callback(r);}else{return r;};
                 }   
             })   
         }
