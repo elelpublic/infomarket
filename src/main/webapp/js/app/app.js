@@ -381,7 +381,7 @@
                         var file = files.fileHistories[i],
                             ext = file.split(".").pop().toLowerCase(),
                             name = file.split("-").slice(1).join('-'),
-                            url = restBase + "rest/api/binary/0/filerevisions?fileHistory=" + file,
+                            url = restBase + "rest/api/binary/0/filerevisions/" + file.split("-")[0] + "-CURRENT-" + name,
                             cls = fileTypes.filter(function(v) {
                                     return v.ext.indexOf(ext) > -1;
                             })[0];
