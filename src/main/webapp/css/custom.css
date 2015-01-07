@@ -437,6 +437,11 @@ blockquote {
     font-size: 16px;
 }
 
+._5sB ._5sBi._pAr {
+    right: auto;
+    left: 10px;
+}
+
 ._5sB ._5sBr {
     position: relative;
     margin-top: 10px;
