@@ -371,7 +371,7 @@
                         {ext: ['xlk','xls','xlsb','xlsm','xlsx'], class: 'file-excel'},
                         {ext: ['doc','docx','dot','dotx','dotm'], class: 'file-word'},
                         {ext: ['ppt','pptx','pps','ppsx','pot'], class: 'file-powerpoint'},
-                        {ext: ['pdf'], class:'pdf'},
+                        {ext: ['pdf'], class:'file-pdf'},
                         {ext: ['jpg','jpeg','png','gif','bmp','ico','psd','tga'], class:'file-image'},
                         {ext: ['zip','rar','tar','gz','7z','jar'], class:'file-archive'},
                         {ext: ['txt','json','xml','log','cfg','diff','ini'], class:'file-text'},
