@@ -1,6 +1,6 @@
 <div class="container">
     <div class="row-fluid">
-        <div class="span6 _3cmB">
+        <div class="span7 _3cmB">
 
             <h4><i class="fa {{page_title_icon}}"></i> {{page_title}}:</h4>
             <hr>
@@ -10,13 +10,25 @@
                 <label>{{captions.category}}:</label>
                 <select name="category" ng-model="post_category">
                     <option></option>
-                    <option ng-repeat="category in categories" value="{{category.name}}">{{category.name}}</option>							
+                    <option ng-repeat="category in categories" value="{{category.name}}">{{category.name}}</option>
                 </select>
                 <label>{{captions.textLabel}}:</label>
                 <div></div>
                 <textarea name="text" ng-model="post_text" class="input-block-level _4aS" rows="5" maxlength="2500" required style="margin-bottom: 5px;"></textarea>
                 <span class="help-block" style="display: none;">{{captions.leghtLimitLeft | ucfirst}}: <i>2500</i></span>
                 <br>
+                <div ng-if="isPersistent">
+                    <script>(function(d, s, id) {
+                      if (d.getElementById(id)){d.getElementById(id).parentNode.removeChild(d.getElementById(id));}
+                      var js, fjs = d.getElementsByTagName(s)[0];
+                      if (d.getElementById(id)) return;
+                      js = d.createElement(s); js.id = id;
+                      js.src = "/flyer/sdk/sdk.js";
+                      fjs.parentNode.insertBefore(js, fjs);
+                    }(document, 'script', 'projectile-jssdk'));</script>
+                    <div class="projectile-filer" data-filer-type="1" data-filer-theme="1" data-filer-folderid="{{flyerFolderId}}"></div>
+                    <br>
+                </div>
                 <div class="row">
                     <a href="javascript:history.back()" class="pull-left ns-underline" style="font-size:12px; color:#888; margin-top:5px;"><i class="fa fa-arrow-circle-left"></i> {{captions.cancel}}</a>
                     <button type="submit" class="btn btn-success btn-with-icon-r pull-right">{{captions.submit}}</button>
@@ -24,14 +36,14 @@
             </form>	
 
         </div>
-        <div class="span6">
+        <div class="span5">
             <ul class="_5lBp">
 
                 <li class="_3cmB item">
                     <h4><i class="fa fa-desktop"></i> {{captions.livePreview}}:</h4>
                     <hr>
 
-                    <p style="white-space: pre-wrap;" ng-bind-html="post_text"></p>
+                    <p style="white-space: pre-wrap;" ng-bind-html="post_text | bbcode"></p>
 
                     <div class="_5lBp-attaches">
                         <ul></ul>							

@@ -113,7 +113,8 @@
             nodeSCreatedT: ["${Phrases:$0 was created}:::${InfoMarket:InfoNode}",""],
             nodeSEditedT: ["${Phrases:$0 was saved}:::${InfoMarket:InfoNode}",""],
             leghtLimitLeft: ["System|characters left",""],
-            backToTop: ["Tooltip|scroll to start",""]
+            backToTop: ["Tooltip|scroll to start",""],
+            files: ["Flyer|Files",""]
         };
         
         $scope.captions = {};
@@ -201,7 +202,7 @@
         @List Controller
         (is declared on Infonodes List Page)
     */
-    app.controller('ListController', function($scope, $http, $routeParams, CategoriesService, KeywordsService, InfoNodesService, SoftLinksService){
+    app.controller('ListController', function($scope, $http, $routeParams, CategoriesService, KeywordsService, InfoNodesService, SoftLinksService, OthersService){
         var keyword = $routeParams.keyword,
             callback = function(data){
                 if(!data.Entries || !data){
@@ -214,11 +215,16 @@
                 InfoNodesService.list($scope.keyword.id, function(data){
                     $scope.infobits = data.Entries;
                     /* html render */
-                    for(key in $scope.infobits){
+                    for(var key in $scope.infobits){
                         var val = $scope.infobits[key];
                         InfoNodesService.htmlRead(val.id, {key: key}, function(data, params){
                             $scope.infobits[params.key].content = data;
-                        });   
+                        });
+                        OthersService.flyerFolderGet(val.id, {key: key}, function(data, params){
+                            if(!data || !data.Entries){return}
+                            $scope.infobits[params.key].flyerFolderId = data.Entries[0].id;
+                            $scope.infobits[params.key].files = data.Entries[0];
+                        });
                     }
                 });
                 
@@ -343,6 +349,47 @@
                         $(el.currentTarget).find('span').text( parseFloat($(el.currentTarget).find('span').text()) + notifyOpts.count );
                     });
                 }
+                
+                $scope.getFiles = function(id, scope){
+                    if(!$scope.infobits || typeof id == "undefined"){ return false }else{
+                        for(var key in $scope.infobits){
+                            if (key === 'length' || !$scope.infobits.hasOwnProperty(key)) continue;
+                            if(id == $scope.infobits[key].id){
+                                id = key;
+                                break;
+                            }
+                        }
+                    }
+                    if(!$scope.infobits[id] || !$scope.infobits[id].files){return false}
+                    var files = $scope.infobits[id].files;
+                    if(!files || !files.fileHistories || !files.fileHistories.length){ return false }
+                    if(scope && scope == 'count'){
+                        return files.fileHistories.length;
+                    }
+                    
+                    var data = "", fileTypes = [
+                        {ext: ['xlk','xls','xlsb','xlsm','xlsx'], class: 'file-excel'},
+                        {ext: ['doc','docx','dot','dotx','dotm'], class: 'file-word'},
+                        {ext: ['ppt','pptx','pps','ppsx','pot'], class: 'file-powerpoint'},
+                        {ext: ['pdf'], class:'pdf'},
+                        {ext: ['jpg','jpeg','png','gif','bmp','ico','psd','tga'], class:'file-image'},
+                        {ext: ['zip','rar','tar','gz','7z','jar'], class:'file-archive'},
+                        {ext: ['txt','json','xml','log','cfg','diff','ini'], class:'file-text'},
+                        {ext: ['html','css','js','php','java','bat','sh','inf','cmd','vbs','jsp','csv'], class:'file-code'}
+                    ];
+                    for(var i = 0; i<files.fileHistories.length; i++){
+                        var file = files.fileHistories[i],
+                            ext = file.split(".").pop().toLowerCase(),
+                            name = file.split("-").slice(1).join('-'),
+                            url = restBase + "rest/api/binary/0/filerevisions/" + file.split("-")[0] + "-CURRENT-" + name,
+                            cls = fileTypes.filter(function(v) {
+                                    return v.ext.indexOf(ext) > -1;
+                            })[0];
+                        cls = (cls ? cls : {class: 'file'});
+                        data += '<li><a href="'+url+'" class="ns-underline" target="_blank"><i class="fa fa-'+cls.class+'-o"></i>'+name+'</a></li>';
+                    }
+                    return data;
+                }
 
             };
         
@@ -355,7 +402,7 @@
         @AddFormController Controller
         (is declared on Add, Edit, Duplicate Infodes Page)
     */
-    app.controller('AddFormController', function($scope, $http, $routeParams, CategoriesService, KeywordsService, InfoNodesService, _zhType){
+    app.controller('AddFormController', function($scope, $http, $routeParams, CategoriesService, KeywordsService, InfoNodesService, OthersService, _zhType){
         CategoriesService.list(function(data){
             $scope.categories = data.Entries; 
         });
@@ -371,6 +418,11 @@
                     $scope.date = $scope.infobit.createdTime;
                     $scope.last_change = new Date();
                     $scope.post_user = $scope.infobit.owner;
+                    OthersService.flyerFolderGet($routeParams.infobitId, {}, function(data){
+                        if(!data || !data.Entries){return}
+                        $scope.isPersistent = true;
+                        $scope.flyerFolderId = data.Entries[0].id;
+                    });
                 }else if(_zhType == 'duplicate'){
                     $scope.page_title = $scope.captions.newEntry;
                     $scope.page_title_icon = 'fa-files-o';
@@ -453,6 +505,18 @@
                 break;
             }
         }
+        
+        //CTRL+S to save
+        $(window).bind('keydown', function(event) {
+            if (event.ctrlKey || event.metaKey) {
+                switch (String.fromCharCode(event.which).toLowerCase()) {
+                    case 's':
+                    event.preventDefault();
+                    $('button:submit').trigger("click")
+                break;
+                }
+            }
+        });
         
         loadJqueryFn();
     });
@@ -750,10 +814,10 @@
                                   </li>';
                         }
                         h += '</ul></div>';
-                        h += '<div class="span6 _5sBr _3cmB"><p class="muted">'+ captions.searchNoResults +'?</p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-circle"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';
+                        h += '<div class="span6 _5sBr _3cmB"><p class="muted">'+ captions.searchNoResults +'?</p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-square"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';
 
                     }else{
-                        h += '<div class="span6 _5sBr _3cmB"><p class="text-error">'+ captions.searchFailText +': <b>'+ data +'</b></p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-circle"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';       
+                        h += '<div class="span6 _5sBr _3cmB"><p class="text-error">'+ captions.searchFailText +': <b>'+ data +'</b></p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-square"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';       
                     }  
                 },
                 $appendText = function(){
@@ -778,6 +842,15 @@
                 $show();
                 $toggleLoader();
             });
+        };
+        this.flyerFolderGet = function(id, params, callback){
+            AjaxService.send('get', 'rest/api/json/0/folders?name=^.|InfoMarket|InfoNode|1|' + id).success(function(r){
+                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
+                    if(callback){callback(r, params);}else{return true;};
+                }else{
+                    if(callback){callback(false);}else{return false;};
+                }
+            })   
         }
     });
     
@@ -825,6 +898,14 @@
         return function(string) {
             return (string ? string.charAt(0).toUpperCase() + string.slice(1) : '');
         }
+    }).filter('bbcode', function () {
+        return function(text) {
+            text = htmlentities(text);
+            return text
+                .replace(/\[web\|(.*?)\]/g, "<a href=\"$1\" target=\"_blank\">$1</a>")
+                .replace(/\[doc\|(.*?)\]/g, "<a href=\"/projectile/start#!/$1\" target=\"_parent\">Link to a Document</a>")
+                .replace(/\[(.*?)\]/g, "<a href=\"#/list/$1\" style=\"text-decoration:underline\">$1</a>");
+            }
     });
     
     /*
@@ -893,6 +974,14 @@
         if(k == 'repeat'){
             $('*[data-title]').tipsy();
             $('a.lightbox').iLightbox();
+            
+            
+            /* infonode files toglleShow */
+            $(".item").on('click', '._4lBp-attc', function (e) {
+                e.preventDefault();
+                $(this).closest('.item').find('._5lBp-attaches').slideToggle("fast");
+                return true;
+            });
             
             scrollToInfoNode();
             

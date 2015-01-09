@@ -87,14 +87,14 @@ function notify(e){return $.cNotify(e)}(function(e){e.cNotify=function(t){var n=
                                     f._trans(s, "[img]" + m, "[/img]", (m ? m.length : 0));
                                 break;
                                 case 'link':
-                                    f._trans(s, "[web|", "]", 5);
+                                    f._trans(s, "[web|http://", "]", 12);
                                 break;
                                 case 'keyword':
                                     f._trans(s, "[", "]", 1);
                                     s.trigger("kAutoComplete.show");
                                 break;
                                 case 'euro':
-                                    f._trans(s, "[doc|", "]", 5);
+                                    f._trans(s, "[doc|^.|Default|Currency|1|EURO", "]", 32);
                                 break;
                                 case 'center':
                                     f._trans(s, "[center]", "[/center]", 8);
@@ -127,6 +127,7 @@ function notify(e){return $.cNotify(e)}(function(e){e.cNotify=function(t){var n=
                              }
                          }
                          $(textarea).trigger('input');
+                         $(textarea).focus();
                     },
                     validateURL: function(e){
 	                   var t = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
@@ -197,9 +198,30 @@ function notify(e){return $.cNotify(e)}(function(e){e.cNotify=function(t){var n=
                         f._unbindOptions();
                     },
                     _bindOptions: function(){
+                        var _blEl,
+                            _blFn = function(e){
+                            if(o.is(":focus")){return true;}
+                            var related = _blEl,
+                                inside = false;
+                            if (related !== o || related !== s) {
+                                if (related) {
+                                    inside = (related.parents(b).length > 0 ? true : false);
+                                }
+                                if (inside) {
+                                    return true;
+                                }
+                            }
+                            f._hide()
+                        };
+                        
                         e(document).bind("contextmenu", function() {
                             f._hide()
-                        }).bind('keydown', f._documentKeyDown);
+                        }).bind('keydown', f._documentKeyDown).mousedown(function(e) {
+                            _blEl = $(e.target);
+                            _blFn();
+                        }).mouseup(function(e) {
+                            _blEl = null;
+                        });
                         e(window).blur(function() {
                             f._hide()
                         }).on("resize", function() {
@@ -210,9 +232,10 @@ function notify(e){return $.cNotify(e)}(function(e){e.cNotify=function(t){var n=
                                 delete f._cTps;
                                 f._lookup = "";
                                 f._oldVal = "";
-                                return true;   
+                                return true;
                             }
                         });
+                        s.bind("blur", _blFn);
                         s.bind("keypress", f._sKeyPress);
                     },
                     _unbindOptions: function(){
