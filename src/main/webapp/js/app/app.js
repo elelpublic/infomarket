@@ -221,7 +221,7 @@
                             $scope.infobits[params.key].content = data;
                         });
                         OthersService.flyerFolderGet(val.id, {key: key}, function(data, params){
-                            if(!data || !data.Entries){return}
+                            if(!data || !data.Entries){return false}
                             $scope.infobits[params.key].flyerFolderId = data.Entries[0].id;
                             $scope.infobits[params.key].files = data.Entries[0];
                         });
@@ -244,11 +244,11 @@
                         buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel},
                         callback: function(e){
                             if(e){
-                                KeywordsService.update($scope.keyword.id, {keyword: e}, function(data){
-                                    if(data){
+                                KeywordsService.update($scope.keyword.id, {keyword: e}, function(r){
+                                    if( r.StatusCode && r.StatusCode.CodeNumber == 0 ){
                                         location.href = '#/list/' + e;
-                                    }else{
-                                        modal({type:'error',title:'Error', text:'Something is wrong. Please try again later!'});
+                                    } else {
+                                        modal({type:'error',title:$scope.captions.error, text:r.Message});
                                     }
                                 });
                             }
@@ -419,9 +419,21 @@
                     $scope.last_change = new Date();
                     $scope.post_user = $scope.infobit.owner;
                     OthersService.flyerFolderGet($routeParams.infobitId, {}, function(data){
-                        if(!data || !data.Entries){return}
-                        $scope.isPersistent = true;
-                        $scope.flyerFolderId = data.Entries[0].id;
+                    	// no reply
+                        if( !data ) { return false }
+                        // no folder -> create new one
+                        if( !data.Entries && data.StatusCode && data.StatusCode.CodeNumber == 0 ) {
+                            OthersService.flyerFolderCreate( $routeParams.infobitId, function( data ) {
+                                if( data.StatusCode && data.StatusCode.CodeNumber == 0 ) {
+                                	$scope.isPersistent = true;
+                                    $scope.flyerFolderId = data.Entries[0].id;
+                                }
+                            } );
+                        }
+                        if( data.Entries ) {
+                            $scope.isPersistent = true;
+                            $scope.flyerFolderId = data.Entries[0].id;
+                        }
                     });
                 }else if(_zhType == 'duplicate'){
                     $scope.page_title = $scope.captions.newEntry;
@@ -599,7 +611,7 @@
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
-                    if(callback){callback(false);}else{return false;};
+                    if(callback){callback(r);}else{return r;};
                 }
             });   
         }
@@ -851,6 +863,15 @@
                     if(callback){callback(false);}else{return false;};
                 }
             })   
+        };
+        this.flyerFolderCreate = function( id, callback ) {
+            AjaxService.send('post', 'rest/api/json/0/folders', {link: '^.|InfoMarket|InfoNode|1|' + id}).success(function(r){
+               if(r.StatusCode && r.StatusCode.CodeNumber == 0){
+                   if(callback){callback(r);}else{return true;};
+              }else{
+                  if(callback){callback(r);}else{return r;};
+              }   
+            })
         }
     });
     
