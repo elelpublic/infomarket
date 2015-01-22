@@ -339,9 +339,10 @@
                             type: 'default',
                             title: notifyOpts.title,
                             message: notifyOpts.message,
-                            position: {x: "right", y: "bottom"},
+                            position: {x: "right", y: "top"},
                             icon: notifyOpts.icon,
                             autoHide: true,
+                            theme: 'dark-theme',
                             delay: 'auto',
                             overflowHide: true
                         });
@@ -1031,6 +1032,9 @@
         
         /* enable backToTop Button */
         backToTopFn();
+        
+        //remove tipsy {Bug}
+        $(".tipsy").remove();
     }
     //if(!inIframe()){window.location = 'http://google.com'}
 })();
