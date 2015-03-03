@@ -20,8 +20,7 @@ a:active{
 }
 
 a:focus {
-    outline: thin dotted #333;
-    outline-offset: 1px;
+    outline: 0;
 }
 
 a.ns-underline:hover,
@@ -147,7 +146,7 @@ ol {
 	padding: 0 30px;
 }
 .container-fluid{
-    min-width: 560px;
+    min-width: 960px;
     padding: 0;
 }
 
