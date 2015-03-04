@@ -223,7 +223,11 @@
                         OthersService.flyerFolderGet(val.id, {key: key}, function(data, params){
                             if(!data || !data.Entries){return false}
                             $scope.infobits[params.key].flyerFolderId = data.Entries[0].id;
-                            $scope.infobits[params.key].files = data.Entries[0];
+                            OthersService.flyerFolderFilesGet( data.Entries[0].id, function( data ) {
+                            	if( data && data.Entries ) {
+                            		$scope.infobits[params.key].files = data.Entries;
+                            	}
+                            } );
                         });
                     }
                 });
@@ -363,9 +367,9 @@
                     }
                     if(!$scope.infobits[id] || !$scope.infobits[id].files){return false}
                     var files = $scope.infobits[id].files;
-                    if(!files || !files.fileHistories || !files.fileHistories.length){ return false }
+                    if(!files || !files.length){ return false }
                     if(scope && scope == 'count'){
-                        return files.fileHistories.length;
+                        return files.length;
                     }
                     
                     var data = "", fileTypes = [
@@ -378,11 +382,12 @@
                         {ext: ['txt','json','xml','log','cfg','diff','ini'], class:'file-text'},
                         {ext: ['html','css','js','php','java','bat','sh','inf','cmd','vbs','jsp','csv'], class:'file-code'}
                     ];
-                    for(var i = 0; i<files.fileHistories.length; i++){
-                        var file = files.fileHistories[i],
-                            ext = file.split(".").pop().toLowerCase(),
-                            name = file.split("-").slice(1).join('-'),
-                            url = restBase + "rest/api/binary/0/filerevisions/" + file.split("-")[0] + "-CURRENT-" + name,
+                    for(var i = 0; i<files.length; i++){
+                        var file = files[i],
+                            ext = file.file.split(".").pop().toLowerCase(),
+                            name = file.file,
+                            id = file.id.split("-").slice(1).join('-'),
+                            url = restBase + "rest/api/binary/0/filerevisions/" + file.folder + "-CURRENT-" + id,
                             cls = fileTypes.filter(function(v) {
                                     return v.ext.indexOf(ext) > -1;
                             })[0];
@@ -873,6 +878,16 @@
                   if(callback){callback(r);}else{return r;};
               }   
             })
+        };
+        this.flyerFolderFilesGet = function( id, callback ) {
+        	AjaxService.send( 'get', 'rest/api/json/0/filehistories?folder=' + id ).success( function( r ) {
+        		if( r.StatusCode && r.StatusCode.CodeNumber == 0 ) {
+        			if( callback ) { callback( r ); } else { return true; };
+        		}
+        		else {
+        			if( callback ) { callback( r ); } else { return false; };
+        		}
+        	} );
         }
     });
     
