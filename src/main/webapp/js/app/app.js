@@ -27,6 +27,11 @@
             templateUrl: Root + 'templates/list_page.html', 
             controller:  'ListController'
         })
+        .when('/add/', {
+            templateUrl: Root + 'templates/add_page.html', 
+            controller:  'AddFormController',
+            resolve: {_zhType: function(){return "new";}}
+        })
         .when('/add/keyword=:keyword', {
             templateUrl: Root + 'templates/add_page.html', 
             controller:  'AddFormController',
@@ -267,14 +272,13 @@
                     modal({title: $scope.captions.confirmation, type: 'confirm', text: $scope.captions.removeConfirmationText, buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel} ,callback: function(e){
                             if(e){
                                 InfoNodesService.delete(id, function( r ) {
-                                    if( r.StatusCode && r.StatusCode.CodeNumber == 0 ) {
-                                        $(el.currentTarget).closest('.item').slideUp(250, function(){
-                                            $(this).remove();
-                                        });
+                                    if( !r.StatusCode || r.StatusCode.CodeNumber != 0 ) {
+                                        modal({title: $scope.captions.error, type:'error', text: r.Message});   
                                     }
-                                    else {
-                                        modal({title: $scope.captions.error, type:'error', text: r.Message});
-                                    }
+                                });
+                                
+                                $(el.currentTarget).closest('.item').slideUp(250, function(){
+                                    $(this).remove();
                                 });
                             }
                         }
@@ -465,13 +469,17 @@
                 if(data && data.Entries){
                     $scope.keyword = data.Entries[0];
                 }else{
-                    $scope.keyword = {id:null, keyword: $routeParams.keyword}
-                    if(_zhType == 'new'){
-                        $('input[data-id="khd3kp"]').removeAttr('readonly').removeAttr('disabled');   
-                    }
+                    location.href = '#/';
                 }
             }
-            KeywordsService.find($routeParams.keyword, 'EXACT_KEYWORD', callback)
+            if($routeParams.keyword){
+                KeywordsService.find($routeParams.keyword, 'EXACT_KEYWORD', callback);
+            }else{
+                $scope.keyword = {id:null, keyword: $routeParams.keyword}
+                if(_zhType == 'new'){
+                    $('input[data-id="khd3kp"]').attr('placeholder', $scope.captions.keywordNameTitle).removeAttr('readonly').removeAttr('disabled').focus();
+                }   
+            }
         }
         
         $scope.submitData = function(){
@@ -491,8 +499,9 @@
             switch(_zhType){
                 case 'new':
                    InfoNodesService.create(data, function(data){
-                        modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSCreatedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
-                        });
+                        notify({type:'alert', position: {x: "right", y: "top"}, title: $scope.captions.message, message: $scope.captions.nodeSCreatedT+'.', autoHide: true, theme: "dark-theme", closeBtn: false});
+                        //location.href='#/list/' + $scope.keyword.keyword;
+                        location.href = '#/edit/' + data.Entries[0].id;
                         $('button:submit').removeAttr('disabled');
                     }); 
                 break;
@@ -503,8 +512,9 @@
                         if(result && result.Entries){
                             data.keyword = result.Entries[0].id;
                             InfoNodesService.create(data, function(data){
-                                modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSCreatedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}
-                                });
+                                notify({type:'alert', position: {x: "right", y: "top"}, title: $scope.captions.message, message: $scope.captions.nodeSCreatedT+'.', autoHide: true, theme: "dark-theme", closeBtn: false});
+                                //location.href='#/list/' + $scope.keyword.keyword;
+                                location.href = '#/edit/' + data.Entries[0].id;
                                 $('button:submit').removeAttr('disabled');
                             });
                         }
@@ -515,7 +525,8 @@
                     delete data.keyword;
                     InfoNodesService.update($scope.infobit.id, data, function( r ){
                         if( r.StatusCode && r.StatusCode.CodeNumber == 0 ) {
-                            modal({type:'success', title: $scope.captions.message, text: $scope.captions.nodeSEditedT+'.', buttonText: {ok:$scope.captions.ok,yes:$scope.captions.yes,cancel:$scope.captions.cancel}, autoclose: true, callback: function(){location.href='#/list/' + $scope.keyword.keyword;}});
+                            notify({type:'alert', position: {x: "right", y: "top"}, title: $scope.captions.message, message: $scope.captions.nodeSEditedT+'.', autoHide: true, theme: "dark-theme", closeBtn: false});
+                            location.href='#/list/' + $scope.keyword.keyword;
                         }
                         else {
                             modal({title: $scope.captions.error, type:'error', text: r.Message});

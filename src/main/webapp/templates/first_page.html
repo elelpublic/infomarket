@@ -4,7 +4,7 @@
 
         <div class="span12 _5sB" align="center">
             <div class="_5sBi _pAr">
-                <a href="#/add/keyword={{captions.keywordNameTitle}}"><i class="fa fa-plus-square" style="vertical-align:middle"></i> <span style="font-size:12px">{{captions.addK}}</span></a>
+                <a href="#/add/"><i class="fa fa-plus-square" style="vertical-align:middle"></i> <span style="font-size:12px">{{captions.addK}}</span></a>
             </div>
             <div class="_5sBi">
                 <a href="javascript:;" ng-click="toggleStatistic();" data-title="{{captions.statistic}}"><i class="fa fa-pie-chart "></i></a>
@@ -43,7 +43,7 @@
                 <h4>{{captions.recentEntries | ucfirst}}</h4>
                 <table class="table table-bordered td-with-date table-custom-1">
                     <tbody>
-                        <tr ng-repeat="keyword in keywords.Entries | orderBy: '-id' | limitTo: 20">
+                        <tr ng-repeat="keyword in keywords.Entries | orderBy: '-lastModified' | limitTo: 20">
                             <td><a href="#/list/{{keyword.keyword}}">{{keyword.keyword}}</a></td>
                             <td width="22%"><span>{{keyword.timeCreated | date:'dd.MM.yyyy'}}</span></td>
                         </tr>

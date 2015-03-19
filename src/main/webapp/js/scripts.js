@@ -15,7 +15,7 @@
 		var n = e.extend({}, {}, t);
 		this.each(function(t, r) {
 			var s = e(r),
-                o = e('<div id="ibbCode" class="row"><ul><li class="ibbCode-group"><a title="URL" data-ibb="link"><i class="fa fa-link"></i></a><a title="Keyword" data-ibb="keyword"><i class="fa fa-chain-broken"></i></a><a title="Internal URL" data-ibb="euro"><i class="fa fa-anchor"></i></a></li></ul></div>'),
+                o = e('<div id="ibbCode" class="row"><ul><li class="ibbCode-group"><a title="URL" data-ibb="link"><i class="fa fa-link"></i></a><a title="Keyword" data-ibb="keyword"><i class="fa fa-chain-broken"></i></a><a title="'+(window.top.bsm && window.top.bsm.clipBoardData && window.top.bsm.clipBoardData.length > 0 ? 'Paste Copied Document' : 'Internal URL')+ '" data-ibb="euro"><i class="fa fa-anchor"></i></a></li></ul></div>'),
                 //o = e('<div id="ibbCode" class="row"><ul><li class="ibbCode-group"><a title="Headline" data-ibb="headline"><i class="fa fa-header"></i></a></li><li class="ibbCode-group"><a title="Bold" data-ibb="bold"><i class="fa fa-bold"></i></a><a title="Italic" data-ibb="italic"><i class="fa fa-italic"></i></a><a title="Underline" data-ibb="underline"><i class="fa fa-underline"></i></a><a title="Strikethrough" data-ibb="strikethrough"><i class="fa fa-strikethrough"></i></a></li><li class="ibbCode-group"><a title="Font" data-ibb="text-font"><i class="fa fa-font"></i></a><ul><li class="ibbCode-group"><a data-ibb="text-font" title="Arial" style="font-family: Arial;">Arial</a><a data-ibb="text-font" title="Comic Sans MS" style="font-family: Comic Sans MS;">Comic Sans MS</a><a data-ibb="text-font" title="Courier New" style="font-family: Courier New;">Courier New</a><a data-ibb="text-font" title="Lucida Console" style="font-family: Lucida Console;">Lucida Console</a><a data-ibb="text-font" title="Tahoma" style="font-family: Tahoma;">Tahoma</a><a data-ibb="text-font" title="Times New Roman" style="font-family: Times New Roman;">Times New Roman</a><a data-ibb="text-font" title="Verdana" style="font-family: Verdana;">Verdana</a><a data-ibb="text-font" title="Symbol" style="font-family: Symbol;">Symbol</a></li></ul><a title="Font Size" data-ibb="text-size"><i class="fa fa-text-height"></i></a><ul><li class="ibbCode-group"><a data-ibb="text-size" style="font-size:10px;">Size 1</a><a data-ibb="text-size" style="font-size:12px;">Size 2</a><a data-ibb="text-size" style="font-size:14px;">Size 4</a><a data-ibb="text-size" style="font-size:16px;">Size 6</a></li></ul></li><li class="ibbCode-group"><a title="Image" data-ibb="image"><i class="fa fa-picture-o"></i></a><a title="URL" data-ibb="link"><i class="fa fa-link"></i></a><a title="Keyword" data-ibb="keyword"><i class="fa fa-chain-broken"></i></a><a title="Internal URL" data-ibb="euro"><i class="fa fa-anchor"></i></a><a title="Center Align" data-ibb="center"><i class="fa fa-align-center"></i></a></li></ul></div>'),
                 f = {
 					init: function() {
@@ -63,7 +63,8 @@
                                     s.trigger("kAutoComplete.show");
                                 break;
                                 case 'euro':
-                                    f._trans(s, "[doc|^.|Default|Currency|1|EURO", "]", 32);
+                                    var euro_val = (window.top.bsm && window.top.bsm.clipBoardData && window.top.bsm.clipBoardData.length > 0 ? "[doc|" + window.top.bsm.clipBoardData[window.top.bsm.clipBoardData.length-1] : "[doc|^.|Default|Currency|1|EURO");
+                                    f._trans(s, euro_val, "]", euro_val.length+1);
                                 break;
                                 case 'center':
                                     f._trans(s, "[center]", "[/center]", 8);
