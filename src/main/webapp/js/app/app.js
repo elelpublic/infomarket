@@ -469,17 +469,15 @@
                 if(data && data.Entries){
                     $scope.keyword = data.Entries[0];
                 }else{
-                    location.href = '#/';
+                    $scope.keyword = {id:null, keyword: $routeParams.keyword}
+                    if(_zhType == 'new'){
+                        setTimeout(function(){
+                            $('input[data-id="khd3kp"]').attr('placeholder', $scope.captions.keywordNameTitle).removeAttr('readonly').removeAttr('disabled').select();
+                        }, 10);
+                    }
                 }
             }
-            if($routeParams.keyword){
-                KeywordsService.find($routeParams.keyword, 'EXACT_KEYWORD', callback);
-            }else{
-                $scope.keyword = {id:null, keyword: $routeParams.keyword}
-                if(_zhType == 'new'){
-                    $('input[data-id="khd3kp"]').attr('placeholder', $scope.captions.keywordNameTitle).removeAttr('readonly').removeAttr('disabled').focus();
-                }   
-            }
+            KeywordsService.find($routeParams.keyword, 'EXACT_KEYWORD', callback)
         }
         
         $scope.submitData = function(){
