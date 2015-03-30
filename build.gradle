@@ -9,7 +9,6 @@
 
 apply plugin: 'java'
 apply plugin: 'war'
-apply plugin: 'application'
 apply plugin: 'eclipse'
 apply plugin: 'ivy-publish'
 apply plugin: 'jetty'
@@ -18,7 +17,7 @@ apply plugin: 'jetty'
 // PROJECT ---------------------------------------------------------
 
 group = 'com.infodesire'
-version = '0.1.5'
+version = '0.1.6'
 httpPort = 8081 // for standalone test
 
 
@@ -178,12 +177,5 @@ eclipse {
   }
 }
 
-
-// MAC OS X: do not show dock icon:
-startScripts{
-    doLast{
-        unixScript.text = unixScript.text.replace('DEFAULT_JVM_OPTS=""', 'DEFAULT_JVM_OPTS="-Dapple.awt.UIElement=true"')
-    }
-}
 
 
