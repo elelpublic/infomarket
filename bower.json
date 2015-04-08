@@ -1,9 +1,9 @@
 {
   "name": "infomarket",
-  "version": "0.1-SNAPSHOT",
+  "version": "0.1.0",
   "homepage": "https://github.com/elelpublic/infomarket",
   "authors": [
-    "larsfrommars <larsfrommars@gmail.com>"
+    "larsfrommars <elelpublic@gmail.com>"
   ],
   "description": "Wikilike intranet.",
   "moduleType": [
