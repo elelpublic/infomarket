@@ -10,7 +10,8 @@
     var app = angular.module('infomarket', ['ngRoute', 'ngSanitize']);
     var Root = inIframe() ? '/projectile/apps/infomarket/' : '/infomarket/',
     	restBase = inIframe() ? '/projectile/restapps/infomarket/' : '/infomarket/rest/',
-        getLinkURI = '/projectile/start#!/app/infomarket';
+        getLinkURI = '/projectile/start#!/app/infomarket',
+        clientId = window.bsm ? window.bsm.clientId : window.top.bsm.clientId;
     
     window.Root = Root;
 
@@ -393,7 +394,7 @@
                             ext = file.file.split(".").pop().toLowerCase(),
                             name = file.file,
                             id = file.id.split("-").slice(1).join('-'),
-                            url = restBase + "api/binary/0/filerevisions/" + file.folder + "-CURRENT-" + id,
+                            url = restBase + 'api/binary/' + clientId + '/filerevisions/' + file.folder + '-CURRENT-' + id,
                             cls = fileTypes.filter(function(v) {
                                     return v.ext.indexOf(ext) > -1;
                             })[0];
@@ -558,7 +559,7 @@
     //Categories Service
     app.service('CategoriesService', function($http, AjaxService){
         this.list = function(callback){
-           AjaxService.send('get', 'api/json/0/keywordcategories').success(function(r){
+           AjaxService.send('get', 'api/json/' + clientId + '/keywordcategories').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -568,7 +569,7 @@
         }
         
         this.find = function(pattern, callback){
-            AjaxService.send('get', 'api/json/0/keywordcategories').success(function(r) {
+            AjaxService.send('get', 'api/json/' + clientId + '/keywordcategories').success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     var matches = r.Entries.filter(function(entry){
                         return (!isNaN(pattern) ? entry.id : entry.name) == pattern;
@@ -581,7 +582,7 @@
         }
         
         this.get = function(id, callback){
-            AjaxService.send('get', 'api/json/0/keywordcategories/' + id).success(function(r) {
+            AjaxService.send('get', 'api/json/' + clientId + '/keywordcategories/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -594,7 +595,7 @@
     //Keywords Service
     app.service('KeywordsService', function($http, AjaxService){
         this.list = function(callback){
-            AjaxService.send('get', 'api/json/0/keywords').success(function(r){
+            AjaxService.send('get', 'api/json/' + clientId + '/keywords').success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -604,7 +605,7 @@
         }
         
         this.find = function(d, searchTarget, callback){
-            AjaxService.send('get', 'api/json/0/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + encodeURIComponent(d)).success(function(r) {
+            AjaxService.send('get', 'api/json/' + clientId + '/keywords?searchMode=STRING&searchTarget='+ (!searchTarget ? 'FULLTEXT' : searchTarget) +'&searchText=' + encodeURIComponent(d)).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};   
                 }else{
@@ -614,7 +615,7 @@
         }
         
         this.get = function(id, callback){
-            AjaxService.send('get', 'api/json/0/keywords/' + id).success(function(r) {
+            AjaxService.send('get', 'api/json/' + clientId + '/keywords/' + id).success(function(r) {
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -624,7 +625,7 @@
         }
         
         this.update = function(id, data, callback){
-            AjaxService.send('put',  'api/json/0/keywords/' + id, data).success(function(r){
+            AjaxService.send('put',  'api/json/' + clientId + '/keywords/' + id, data).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -634,7 +635,7 @@
         }
         
         this.visit = function(id, callback){
-            AjaxService.send('post', 'api/json/0/visits', {keyword: id}).success(function(r){
+            AjaxService.send('post', 'api/json/' + clientId + '/visits', {keyword: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -648,7 +649,7 @@
     //InfoNodes Service
     app.service('InfoNodesService', function($http, AjaxService){
         this.list = function(id, callback){
-            AjaxService.send('get', 'api/json/0/infonodes?keyword='+ id).success(function(r){
+            AjaxService.send('get', 'api/json/' + clientId + '/infonodes?keyword='+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -658,7 +659,7 @@
         }
         
         this.get = function(id, callback, data){
-            var _uri = 'api/json/0/infonodes';
+            var _uri = 'api/json/' + clientId + '/infonodes';
             if(data && Object.keys(data).length > 0){
                 var i = 0;
                 for(e in data){
@@ -680,7 +681,7 @@
         }
         
         this.create = function(data, callback){
-            AjaxService.send('post', 'api/json/0/infonodes', data).success(function(r){
+            AjaxService.send('post', 'api/json/' + clientId + '/infonodes', data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -691,7 +692,7 @@
         }
         
         this.update = function(id, data, callback){
-            AjaxService.send('put',  'api/json/0/infonodes/' + id, data).success(function(r){
+            AjaxService.send('put',  'api/json/' + clientId + '/infonodes/' + id, data).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;}
                 }else{
@@ -703,7 +704,7 @@
         
         this.star = function(id, callback){
             //star / unstar action
-            AjaxService.send('post', 'api/json/0/stars', {infoNode: id}).success(function(r){
+            AjaxService.send('post', 'api/json/' + clientId + '/stars', {infoNode: id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback({status:'starred'});}else{return true;};
                 }else{
@@ -713,7 +714,7 @@
         }
         
         this.delete = function(id, callback){
-            AjaxService.send('delete', 'api/json/0/infonodes/' + id).success(function(r){
+            AjaxService.send('delete', 'api/json/' + clientId + '/infonodes/' + id).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -724,7 +725,7 @@
         }
         
         this.htmlRead = function(id, params, callback){
-            AjaxService.send('get', 'api/html/0/infonodes/' + id).success(function(r){
+            AjaxService.send('get', 'api/html/' + clientId + '/infonodes/' + id).success(function(r){
                 if(callback){callback(r, params);}else{return true;}
             })  
         }
@@ -733,7 +734,7 @@
     //SoftLinks Service
     app.service('SoftLinksService', function($http, AjaxService){
         this.list = function(id, callback){
-            AjaxService.send('get', 'api/json/0/softlinks?keyword=' + id).success(function(r){
+            AjaxService.send('get', 'api/json/' + clientId + '/softlinks?keyword=' + id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -743,7 +744,7 @@
         }
         
         this.get = function(id, callback){
-            AjaxService.send('get', 'api/json/0/softlinks/'+ id).success(function(r){
+            AjaxService.send('get', 'api/json/' + clientId + '/softlinks/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -756,7 +757,7 @@
     //Users Service
     app.service('UsersService', function($http, AjaxService){
         this.get = function(id, callback){
-            AjaxService.send('get', 'api/json/0/employees/'+ id).success(function(r){
+            AjaxService.send('get', 'api/json/' + clientId + '/employees/'+ id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r);}else{return true;};
                 }else{
@@ -777,7 +778,7 @@
                 data += param + 'id=' + value[0];
                 first = false;
             }
-            AjaxService.send('get', 'api/json/0/captions' + data).success(function(data){
+            AjaxService.send('get', 'api/json/' + clientId + '/captions' + data).success(function(data){
                 callback(data);
             });  
         }
@@ -788,17 +789,17 @@
         this.get = function(type, callback){
             switch(type){
                 case 'general':
-                    AjaxService.send('get', 'api/json/0/infomarketstatisticss/10').success(function(data){
+                    AjaxService.send('get', 'api/json/' + clientId + '/infomarketstatisticss/10').success(function(data){
                         callback(data);
                     });
                 break;
                 case 'categories':
-                    AjaxService.send('get', 'api/json/0/topentries?topList=CATEGORY').success(function(data){
+                    AjaxService.send('get', 'api/json/' + clientId + '/topentries?topList=CATEGORY').success(function(data){
                         callback(data);
                     });
                 break;
                 case 'users':
-                    AjaxService.send('get', 'api/json/0/topentries?topList=AUTHOR').success(function(data){
+                    AjaxService.send('get', 'api/json/' + clientId + '/topentries?topList=AUTHOR').success(function(data){
                         callback(data);
                     });
                 break;
@@ -873,7 +874,7 @@
             });
         };
         this.flyerFolderGet = function(id, params, callback){
-            AjaxService.send('get', 'api/json/0/folders?name=^.|InfoMarket|InfoNode|1|' + id).success(function(r){
+            AjaxService.send('get', 'api/json/' + clientId + '/folders?name=^.|InfoMarket|InfoNode|1|' + id).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r, params);}else{return true;};
                 }else{
@@ -882,7 +883,7 @@
             })   
         };
         this.flyerFolderCreate = function( id, callback ) {
-            AjaxService.send('post', 'api/json/0/folders', {link: '^.|InfoMarket|InfoNode|1|' + id}).success(function(r){
+            AjaxService.send('post', 'api/json/' + clientId + '/folders', {link: '^.|InfoMarket|InfoNode|1|' + id}).success(function(r){
                if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                    if(callback){callback(r);}else{return true;};
               }else{
@@ -891,7 +892,7 @@
             })
         };
         this.flyerFolderFilesGet = function( id, callback ) {
-        	AjaxService.send( 'get', 'api/json/0/filehistories?folder=' + id ).success( function( r ) {
+            AjaxService.send( 'get', 'api/json/' + clientId + '/filehistories?folder=' + id ).success( function( r ) {
         		if( r.StatusCode && r.StatusCode.CodeNumber == 0 ) {
         			if( callback ) { callback( r ); } else { return true; };
         		}
@@ -1043,7 +1044,7 @@
         $('a.lightbox').iLightbox();
 	
 	    /* enable textarea autosize & kAutoComplete & BBCodes */
-	    $('textarea._4aS').autosize().kAutoComplete({url: restBase + 'api/json/0/keywords'}).bbCode();
+	    $('textarea._4aS').autosize().kAutoComplete({url: restBase + 'api/json/' + clientId + '/keywords'}).bbCode();
         
         /* enable characters length counter */
         $('textarea._4aS[maxlength]').on("keyup focus input propertychange", function (e) {
