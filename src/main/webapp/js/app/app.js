@@ -11,9 +11,12 @@
     var Root = inIframe() ? '/projectile/apps/infomarket/' : '/infomarket/',
     	restBase = inIframe() ? '/projectile/restapps/infomarket/' : '/infomarket/rest/',
         getLinkURI = '/projectile/start#!/app/infomarket',
-        clientId = window.bsm ? window.bsm.clientId : window.top.bsm.clientId;
+        bsm = window.top ? window.top.bsm : window.bsm,
+        clientId = bsm ? bsm.clientId : '0',
+        flyerVersion = '1.2.7';
     
     window.Root = Root;
+    window.flyerVersion = flyerVersion;
 
     /*
         Application Config
