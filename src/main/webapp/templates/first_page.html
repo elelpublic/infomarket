@@ -30,6 +30,12 @@
                 <div class="_5aRxb-icon color-1"><i class="fa fa-star"></i></div>
                 <h4>{{captions.favEntries | ucfirst}}</h4>
                 <table class="table table-bordered table-custom-1">
+					<thead>
+						<tr>
+							<th>{{captions.keyword}}</th>
+                  			<th></th>
+                		</tr>
+					</thead>
                     <tbody>
                         <tr ng-repeat="keyword in keywords.Entries | orderBy: '-stars' | limitTo: 20">
                             <td width="80%"><a href="#/list/{{keyword.keyword}}">{{keyword.keyword}}</a></td>
@@ -42,10 +48,16 @@
                 <div class="_5aRxb-icon color-2"><i class="fa fa-line-chart"></i></div>
                 <h4>{{captions.recentEntries | ucfirst}}</h4>
                 <table class="table table-bordered td-with-date table-custom-1">
+					<thead>
+						<tr>
+							<th>{{captions.keyword}}</th>
+                  			<th>{{captions.created | ucfirst}}</th>
+                		</tr>
+					</thead>
                     <tbody>
                         <tr ng-repeat="keyword in keywords.Entries | orderBy: '-lastModified' | limitTo: 20">
                             <td><a href="#/list/{{keyword.keyword}}">{{keyword.keyword}}</a></td>
-                            <td width="22%"><span>{{keyword.timeCreated | date:'dd.MM.yyyy'}}</span></td>
+                            <td width="30%"><span>{{keyword.lastModified | date:'dd.MM.yyyy'}}</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -54,6 +66,12 @@
                 <div class="_5aRxb-icon color-3"><i class="fa fa-paper-plane"></i></div>
                 <h4>{{captions.lastNews | ucfirst}}</h4>
                 <table class="table table-bordered td-with-date table-custom-1">
+					<thead>
+						<tr>
+							<th>{{captions.keyword}}</th>
+                  			<th>{{captions.created | ucfirst}}</th>
+                		</tr>
+					</thead>
                     <tbody>
                         <tr ng-repeat="news in lastNews | orderBy: '-id' | limitTo: 20">
                             <td><a href="#/list/{{news.keyword}}?infonodeId={{news.id}}">{{news.keyword}}</a></td>
