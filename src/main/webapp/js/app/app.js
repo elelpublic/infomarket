@@ -102,6 +102,7 @@
             remove: ["Document|Remove",""],
             user: ["InfoMarket|User",""],
             date: ["Document|Date",""],
+			created: ["Document|CreatedDate", ""],
             last_change: ["InfoMarket|Last modified",""],
             favEntries: ["InfoMarket|Favourite key words",""],
             recentEntries: ["InfoMarket|Latest key words",""],
