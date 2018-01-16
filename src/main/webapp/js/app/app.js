@@ -94,8 +94,8 @@
             keywordNameTitle: ["InfoMarket|New keyword",""],
             keywordNameText: ["${Phrases:Please enter $0}:::${InfoMarket:a new keyword}",""],
             add: ["Tooltip|Add",""],
-            addD: ["${Phrases:Add%20$0}:::${InfoMarket:InfoNode}",""],
-            addK: ["${Phrases:Add%20$0}:::${InfoMarket:KeyWord}",""],
+            addD: ["${Phrases:Add $0}:::${InfoMarket:InfoNode}",""],
+            addK: ["${Phrases:Add $0}:::${InfoMarket:KeyWord}",""],
             edit: ["Tooltip|Edit",""],
             refresh: ["System|reload",""],
             duplicate: ["Tooltip|Duplicate",""],
@@ -779,7 +779,7 @@
             for(key in captions){
                 var value = captions[key],
                     param = (first ? '?' : '&');
-                data += param + 'id=' + value[0];
+                data += param + 'id=' + encodeURIComponent( value[0] );
                 first = false;
             }
             AjaxService.send('get', 'api/json/' + clientId + '/captions' + data).success(function(data){
@@ -878,7 +878,7 @@
             });
         };
         this.flyerFolderGet = function(id, params, callback){
-            AjaxService.send('get', 'api/json/' + clientId + '/folders?name=^.|InfoMarket|InfoNode|1|' + id).success(function(r){
+            AjaxService.send('get', 'api/json/' + clientId + '/folders?name=' + encodeURIComponent('^.|InfoMarket|InfoNode|1|' + id)).success(function(r){
                 if(r.StatusCode && r.StatusCode.CodeNumber == 0){
                     if(callback){callback(r, params);}else{return true;};
                 }else{
