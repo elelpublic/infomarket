@@ -403,7 +403,7 @@
                                     return v.ext.indexOf(ext) > -1;
                             })[0];
                         cls = (cls ? cls : {class: 'file'});
-                        data += '<li><a href="'+url+'" class="ns-underline" target="_blank"><i class="fa fa-'+cls.class+'-o"></i>'+name+'</a></li>';
+                        data += '<li><a href="'+url+'" class="ns-underline" target="_blank"><i class="fa fa-'+cls.class+'-o"></i>' + escapeXss(name) +'</a></li>';
                     }
                     return data;
                 }
@@ -840,18 +840,20 @@
                     } 
                 },
                 $dataToText = function(){
+                    let escaped = escapeXss(data);
+
                     if(r.length > 0){
-                        h += '<div class="span6 _5sBr _3cmB srdv1"><p class="muted">'+ captions.searchResultText +': <b>'+ data +'</b></p><hr><ul>';
+                        h += '<div class="span6 _5sBr _3cmB srdv1"><p class="muted">'+ captions.searchResultText +': <b>'+ escaped +'</b></p><hr><ul>';
                         for(var i=0; i< r.length; i++){
                             h += '<li>\
                                     <a href="'+ r[i].url +'" class="ns-underline">'+ r[i].title +'</a>\
                                   </li>';
                         }
                         h += '</ul></div>';
-                        h += '<div class="span6 _5sBr _3cmB"><p class="muted">'+ captions.searchNoResults +'?</p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-square"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';
+                        h += '<div class="span6 _5sBr _3cmB"><p class="muted">'+ captions.searchNoResults +'?</p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-square"></i> '+ captions.addK +': <b>'+ escaped +'</b></a></div>';
 
                     }else{
-                        h += '<div class="span6 _5sBr _3cmB"><p class="text-error">'+ captions.searchFailText +': <b>'+ data +'</b></p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-square"></i> '+ captions.addK +': <b>'+ data +'</b></a></div>';       
+                        h += '<div class="span6 _5sBr _3cmB"><p class="text-error">'+ captions.searchFailText +': <b>'+ escaped +'</b></p><a href="#/add/keyword='+ data +'"><i class="fa fa-plus-square"></i> '+ captions.addK +': <b>'+ escaped +'</b></a></div>';
                     }  
                 },
                 $appendText = function(){
@@ -968,6 +970,30 @@
     function htmlentities(t){
         if(!t){return '';}
         return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    }
+
+    function escapeXss(text) {
+        if (!text) return text;
+        if (typeof text !== 'string') return text;
+
+        let result = '';
+
+        for (var i = 0; i < text.length; i++) {
+            let c = text.charAt(i);
+            switch (c) {
+                case '"':
+                case '\'':
+                case '/':
+                case '<':
+                case '>':
+                    result += '&#' + c.charCodeAt(0) + ';';
+                    break;
+                default:
+                    result += c;
+            }
+        }
+
+        return result;
     }
     
     function inIframe(){
